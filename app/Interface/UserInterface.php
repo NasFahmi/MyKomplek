@@ -11,7 +11,7 @@ use App\Interface\Base\UpdateInterface;
 interface UserInterface
 {
     public function login(array $credentials): bool;
-    public function resetPassword(string $username, string $newPassword): bool;
+    public function updatePassword(string $username, string $newPassword): bool;
     public function logout(): void;
 
 }

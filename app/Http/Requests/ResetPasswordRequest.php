@@ -23,8 +23,9 @@ class ResetPasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username' => 'required|exists:users,username',
+            'current_password' => 'required|string',
             'password' => 'required|string|min:6|confirmed',
+            'password_confirmation' => 'required|string|min:6',
         ];
     }
 
@@ -34,11 +35,12 @@ class ResetPasswordRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'username.required' => 'Username wajib diisi.',
-            'username.exists' => 'Username tidak ditemukan.',
-            'password.required' => 'Password wajib diisi.',
-            'password.min' => 'Password minimal 6 karakter.',
-            'password.confirmed' => 'Konfirmasi password tidak cocok.',
+            'current_password.required' => 'Password saat ini harus diisi.',
+            'password.required' => 'Password baru harus diisi.',
+            'password.min' => 'Password baru harus memiliki minimal 6 karakter.',
+            'password.confirmed' => 'Password baru tidak cocok dengan konfirmasi password.',
+            'password_confirmation.required' => 'Konfirmasi password harus diisi.',
+            'password_confirmation.min' => 'Konfirmasi password harus memiliki minimal 6 karakter.',
         ];
     }
 }

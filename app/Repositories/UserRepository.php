@@ -12,7 +12,7 @@ class UserRepository implements UserInterface
         return Auth::attempt($credentials);
     }
 
-    public function resetPassword(string $username, string $newPassword): bool
+    public function updatePassword(string $username, string $newPassword): bool
     {
         $user = User::where('username', $username)->first();
 
@@ -20,9 +20,11 @@ class UserRepository implements UserInterface
             return false;
         }
 
+        // Hash password baru sebelum disimpan
         $user->password = Hash::make($newPassword);
         return $user->save();
     }
+
     public function logout(): void
     {
         Auth::logout();

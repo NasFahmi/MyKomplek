@@ -18,6 +18,8 @@
 
 <body class="">
     @yield('content')
+    <x-toast />
+    @include('layout.scriptjs')
 </body>
 
 </html>

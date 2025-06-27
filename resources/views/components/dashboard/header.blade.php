@@ -36,13 +36,10 @@
 
         {{-- Right Icons --}}
         <div class="flex items-center space-x-4">
-            <div class="hidden md:block">
-                {{-- <x-dashboard.search-bar /> --}}
-            </div>
 
 
-            <a href="{{ route('pengaturan.index') }}" class="hidden md:block cursor-pointer">
-                <div class="w-10 h-10 flex items-center justify-center bg-red-50 rounded-full text-red-700">
+            <a href="{{ route('pengaturan.index') }}" class="hidden cursor-pointer md:block">
+                <div class="flex items-center justify-center w-10 h-10 text-red-700 rounded-full bg-red-50">
                     {{-- Inline SVG --}}
                     {!! file_get_contents(public_path('icon/ic_settings_outline.svg')) !!}
                 </div>
@@ -50,18 +47,36 @@
             </a>
 
 
-            <div class="flex md:block cursor-pointer items-center space-x-4 w-[40px] h-[40px]">
-                <div class="w-10 h-10 flex items-center justify-center bg-[#F5F7FA] rounded-full overflow-hidden">
-                    <img src="{{ asset('images/profile_picture.png') }}" alt="Profile"
-                        class="w-full h-full object-cover" />
+            <!-- Profile Dropdown -->
+            <div x-data="{ open: false }" class="relative">
+                <button @click="open = !open" class="flex items-center space-x-2 focus:outline-none">
+                    <div class="w-10 h-10 bg-[#F5F7FA] rounded-full overflow-hidden flex items-center justify-center">
+                        <img src="{{ asset('images/profile_picture.png') }}" alt="Profile"
+                            class="object-cover w-full h-full" />
+                    </div>
+                </button>
+
+                <!-- Dropdown Menu -->
+                <div x-show="open" @click.outside="open = false" x-transition
+                    class="absolute right-0 z-50 w-48 mt-2 overflow-hidden bg-white rounded-md shadow-lg">
+
+                    <div class="px-4 py-2 text-sm text-gray-700">
+                        {{ auth()->user()->name ?? 'Pengguna' }}
+                    </div>
+                    <div class="border-t"></div>
+
+                    <!-- Logout -->
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="w-full px-4 py-2 text-sm text-left text-red-600 hover:bg-red-100">
+                            Keluar
+                        </button>
+                    </form>
                 </div>
             </div>
+
 
         </div>
     </div>
 
-    {{-- SearchBar for Mobile --}}
-    <div class="mt-2 md:hidden">
-
-    </div>
 </header>

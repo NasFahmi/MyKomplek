@@ -28,10 +28,13 @@ class UserService
         return $authenticated;
     }
 
-    public function resetPassword(string $username, string $newPassword): bool
+    public function updateUserPassword(string $newPassword): bool
     {
-        return $this->userRepository->resetPassword($username, $newPassword);
+        $username = auth()->user()->username;
+        // Panggil repository untuk melakukan update
+        return $this->userRepository->updatePassword($username, $newPassword);
     }
+
     public function logout(): void
     {
         $this->userRepository->logout();

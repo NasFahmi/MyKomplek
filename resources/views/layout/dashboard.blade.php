@@ -15,21 +15,24 @@
 </head>
 
 <body x-data="{ sidebarOpen: false }" class="bg-[#F5F7FA] h-screen overflow-hidden">
-    <div class="block md:flex h-full w-full">
+    <x-toast />
+    <div class="block w-full h-full md:flex">
         <!-- Sidebar -->
-        <x-dashboard.sidebar  />
+        <x-dashboard.sidebar />
 
         <!-- Main Content -->
         <div class="relative flex flex-col w-full h-full overflow-hidden bg-[#F5F7FA]">
             <!-- Header -->
-            <x-dashboard.header  />
+            <x-dashboard.header />
 
             <!-- Page Content -->
-            <div class="flex-1 overflow-y-auto p-4">
+            <div class="flex-1 overflow-y-auto md:px-9 md:py-6">
                 @yield('content')
             </div>
         </div>
     </div>
+
+    @include('layout.scriptjs')
 </body>
 
 </html>
