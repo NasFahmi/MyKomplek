@@ -1,11 +1,12 @@
 @extends('layout.dashboard')
-@section('title', 'Tambah Penghuni')
+{{-- Memperbaiki cara menampilkan title --}}
+@section('title', 'Edit Warga ' . $resident->name)
 @section('content')
 
-    <div class="bg-white rounded-lg shadow p-7">
-        {{-- Header dan Breadcrumb --}}
+    <div x-data="{ imageModalOpen: false }" class="bg-white rounded-lg shadow p-7">
         <div class="flex flex-col items-start justify-between gap-4 mb-6 sm:flex-row sm:items-center">
-            <h1 class="text-xl font-semibold">Tambah Penghuni untuk Rumah {{ $house->house_number }}</h1>
+            <h1 class="text-xl font-semibold">Edit Warga: {{ $resident->name }}</h1>
+
             <nav class="flex" aria-label="Breadcrumb">
                 <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                     <li class="inline-flex items-center">
@@ -26,8 +27,8 @@
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="m1 9 4-4-4-4" />
                             </svg>
-                            <a href="{{ route('rumah.show', $house->id) }}"
-                                class="text-sm font-medium text-gray-700 ms-1 hover:text-blue-600 md:ms-2">{{ $house->house_number }}</a>
+                            <a href="{{ route('warga.index') }}"
+                                class="text-sm font-medium text-gray-700 ms-1 hover:text-blue-600 md:ms-2">Warga</a>
                         </div>
                     </li>
                     <li aria-current="page">
@@ -37,7 +38,7 @@
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="m1 9 4-4-4-4" />
                             </svg>
-                            <span class="text-sm font-medium text-gray-500 ms-1 md:ms-2">Tambah Penghuni</span>
+                            <span class="text-sm font-medium text-gray-500 ms-1 md:ms-2">Edit</span>
                         </div>
                     </li>
                 </ol>
@@ -46,8 +47,11 @@
         <hr class="mb-6">
 
         {{-- MAIN CONTENT - FORM --}}
-        <form action="{{ route('rumah.store-penghuni', $house->id) }}" method="POST" enctype="multipart/form-data">
+        {{-- FIX: Mengarahkan action ke route update dan menambahkan method PUT --}}
+        <form action="{{ route('warga.update', $resident->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
+            @method('PUT')
+
             <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
 
                 {{-- Kolom Kiri --}}
@@ -55,7 +59,8 @@
                     {{-- Nama Lengkap --}}
                     <div>
                         <label for="name" class="block mb-2 text-sm font-medium">Nama Lengkap</label>
-                        <input type="text" id="name" name="name" value="{{ old('name') }}"
+                        {{-- FIX: Menggunakan old() dengan nilai default dari $resident --}}
+                        <input type="text" id="name" name="name" value="{{ old('name', $resident->name) }}"
                             class="block w-full px-3 py-2 text-sm border-gray-200 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 @error('name') border-red-500 @enderror"
                             required>
                         @error('name')
@@ -66,7 +71,8 @@
                     {{-- Nomor Telepon --}}
                     <div>
                         <label for="phone_number" class="block mb-2 text-sm font-medium">Nomor Telepon</label>
-                        <input type="tel" id="phone_number" name="phone_number" value="{{ old('phone_number') }}"
+                        <input type="tel" id="phone_number" name="phone_number"
+                            value="{{ old('phone_number', $resident->phone_number) }}"
                             class="block w-full px-3 py-2 text-sm border-gray-200 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 @error('phone_number') border-red-500 @enderror"
                             required>
                         @error('phone_number')
@@ -79,8 +85,11 @@
                         <label for="status" class="block mb-2 text-sm font-medium">Status Penghuni</label>
                         <select id="status" name="status"
                             class="block w-full px-3 py-2 text-sm border-gray-200 rounded-lg shadow-sm pe-9 focus:border-blue-500 focus:ring-blue-500">
-                            <option value="tetap" {{ old('status') == 'tetap' ? 'selected' : '' }}>Tetap</option>
-                            <option value="kontrak" {{ old('status') == 'kontrak' ? 'selected' : '' }}>Kontrak</option>
+                            {{-- FIX: Menambahkan kondisi 'selected' berdasarkan data yang ada --}}
+                            <option value="tetap" {{ old('status', $resident->status) == 'tetap' ? 'selected' : '' }}>Tetap
+                            </option>
+                            <option value="kontrak" {{ old('status', $resident->status) == 'kontrak' ? 'selected' : '' }}>
+                                Kontrak</option>
                         </select>
                     </div>
 
@@ -89,20 +98,28 @@
                         <label class="block mb-2 text-sm font-medium">Status Menikah</label>
                         <label for="married_status-checkbox"
                             class="relative flex items-center p-3 border border-gray-200 rounded-lg">
-                            {{-- FIX: Hidden input untuk memastikan nilai '0' terkirim jika tidak dicentang --}}
                             <input type="hidden" name="married_status" value="0">
+                            {{-- FIX: Menambahkan kondisi 'checked' berdasarkan data yang ada --}}
                             <input type="checkbox" id="married_status-checkbox" name="married_status"
                                 class="shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500"
-                                value="1" @if (old('married_status')) checked @endif>
+                                value="1" @if (old('married_status', $resident->married_status)) checked @endif>
                             <span class="text-sm text-gray-500 ms-3">Sudah Menikah</span>
                         </label>
                     </div>
+
+
                 </div>
 
                 {{-- Kolom Kanan: File Upload --}}
-                <div class="space-y-2">
-                    <label for="identity_photo" class="block text-sm font-medium">Foto Identitas (KTP/SIM)</label>
-                    {{-- FIX: Menggunakan implementasi file upload yang lebih andal dengan preview --}}
+                <div class="space-y-4">
+                    {{-- FIX: Menampilkan foto yang sudah ada --}}
+
+                    <label class="block text-sm font-medium">Unggah foto identitas <button class="text-[#6c8bf5]"
+                            @click="imageModalOpen = true" type="button">lihat foto
+                            saat
+                            ini</button></label>
+
+
                     <div id="image-preview-container">
                         <label for="identity_photo_input"
                             class="relative flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
@@ -127,42 +144,82 @@
                     @error('identity_photo')
                         <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                     @enderror
+
                 </div>
+            </div>
+
+            <div class="mt-8">
+                <label for="house" class="block mb-2 text-sm font-medium">Rumah Penghuni</label>
+                <select id="house" name="house"
+                    class="block w-full rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    @foreach ($house as $item)
+                        <option value="{{ $item->id }}" {{ old('house') == $item->id ? 'selected' : '' }}>
+                            {{ $item->house_number }}</option>
+                    @endforeach
+                </select>
             </div>
 
             {{-- Tombol Aksi --}}
             <div class="flex justify-end mt-8 gap-x-2">
-                <a href="{{ route('rumah.show', $house->id) }}"
+                <a href="{{ route('warga.index') }}"
                     class="inline-flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-gray-700 align-middle transition-all bg-white border rounded-lg shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600">
                     Batal
                 </a>
                 <button type="submit"
                     class="inline-flex items-center justify-center gap-2 px-4 py-3 text-sm font-semibold text-white transition-all bg-blue-500 border border-transparent rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                    Simpan Penghuni
+                    Simpan Perubahan
                 </button>
             </div>
         </form>
+
+        {{-- MODAL UNTUK MELIHAT GAMBAR IDENTITAS --}}
+        <div x-show="imageModalOpen" x-transition class="fixed inset-0 z-50 flex items-center justify-center p-4"
+            style="display: none;">
+            <div @click="imageModalOpen = false" class="fixed inset-0 bg-black/70"></div>
+            <div class="relative w-full max-w-3xl max-h-full p-4 mx-auto" @click.stop>
+                <img src="{{ asset('storage/' . $resident->identity_photo) }}"
+                    alt="Foto Identitas {{ $resident->name }}" class="object-contain w-full h-full">
+                <button @click="imageModalOpen = false"
+                    class="absolute top-0 right-0 p-2 m-2 text-white rounded-full bg-black/50 hover:bg-black/75">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+        </div>
     </div>
-@endsection
 
-{{-- Skrip untuk menangani pratinjau gambar (image preview) --}}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const identityPhotoInput = document.getElementById('identity_photo_input');
-        const imagePreview = document.getElementById('image-preview');
-        const placeholder = document.getElementById('placeholder');
-
-        identityPhotoInput.addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    imagePreview.src = e.target.result;
-                    imagePreview.classList.remove('hidden');
-                    placeholder.classList.add('hidden');
-                }
-                reader.readAsDataURL(file);
+    {{-- Skrip untuk menangani pratinjau gambar (image preview) --}}
+    <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
+    <script>
+        new TomSelect("#house", {
+            create: true,
+            sortField: {
+                field: "text",
+                direction: "asc"
             }
         });
-    });
-</script>
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const identityPhotoInput = document.getElementById('identity_photo_input');
+            const imagePreview = document.getElementById('image-preview');
+            const placeholder = document.getElementById('placeholder');
+
+            identityPhotoInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        imagePreview.src = e.target.result;
+                        imagePreview.classList.remove('hidden');
+                        placeholder.classList.add('hidden');
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+    </script>
+@endsection

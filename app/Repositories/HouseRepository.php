@@ -4,6 +4,8 @@ namespace App\Repositories;
 
 use App\Interface\HouseInterface;
 use App\Models\House;
+use App\Models\HouseResident;
+use App\Models\Resident;
 use Illuminate\Database\Eloquent\Collection;
 use App\Interface\Base\Model;
 
@@ -50,13 +52,19 @@ class HouseRepository implements HouseInterface
             $house->delete();
         }
     }
-    public function createResidentByHouse(array $data,string $id)
+    public function createResidentForHouse(House $house, array $data): Resident
     {
-        // id == id house
-        $house = House::find($id);
-        if ($house) {
-            $house->residents()->create($data);
-        }
-
+        // make new resident
+        $resident = Resident::create($data);
+        
+        HouseResident::create([
+            'house_id' => $house->id,
+            'resident_id' => $resident->id,
+            'date_of_entry' => now(),
+        ]);
+        // ketika sudah memiliki penghuni maka status house akan menjadi aktif
+        House::find($house->id)->update(['status' => 1]);
+        // dd($houseResident);
+        return $resident;
     }
 }

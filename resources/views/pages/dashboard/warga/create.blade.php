@@ -1,16 +1,17 @@
 @extends('layout.dashboard')
-@section('title', 'Tambah Penghuni')
+{{-- Memperbaiki cara menampilkan title --}}
+@section('title', 'Tambah Warga')
 @section('content')
 
     <div class="bg-white rounded-lg shadow p-7">
-        {{-- Header dan Breadcrumb --}}
         <div class="flex flex-col items-start justify-between gap-4 mb-6 sm:flex-row sm:items-center">
-            <h1 class="text-xl font-semibold">Tambah Penghuni untuk Rumah {{ $house->house_number }}</h1>
+            <h1 class="text-xl font-semibold">Tambah Warga</h1>
+
             <nav class="flex" aria-label="Breadcrumb">
                 <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                     <li class="inline-flex items-center">
-                        <a href="{{ route('dashboard.index') }}"
-                            class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
+                        <a href="#"
+                            class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
                             <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                 fill="currentColor" viewBox="0 0 20 20">
                                 <path
@@ -21,32 +22,36 @@
                     </li>
                     <li>
                         <div class="flex items-center">
-                            <svg class="w-3 h-3 mx-1 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                fill="none" viewBox="0 0 6 10">
+                            <svg class="w-3 h-3 mx-1 text-gray-400 rtl:rotate-180" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="m1 9 4-4-4-4" />
                             </svg>
-                            <a href="{{ route('rumah.show', $house->id) }}"
-                                class="text-sm font-medium text-gray-700 ms-1 hover:text-blue-600 md:ms-2">{{ $house->house_number }}</a>
+                            <a href="{{ route('rumah.index') }}"
+                                class="text-sm font-medium text-gray-700 ms-1 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">Warga</a>
                         </div>
                     </li>
                     <li aria-current="page">
                         <div class="flex items-center">
-                            <svg class="w-3 h-3 mx-1 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                fill="none" viewBox="0 0 6 10">
+                            <svg class="w-3 h-3 mx-1 text-gray-400 rtl:rotate-180" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="m1 9 4-4-4-4" />
                             </svg>
-                            <span class="text-sm font-medium text-gray-500 ms-1 md:ms-2">Tambah Penghuni</span>
+                            <span class="text-sm font-medium text-gray-500 ms-1 md:ms-2 dark:text-gray-400">Tambah</span>
                         </div>
                     </li>
                 </ol>
             </nav>
+
         </div>
         <hr class="mb-6">
 
+        {{-- ====================================================== --}}
+        {{-- MAIN CONTENT --}}
+        {{-- ====================================================== --}}
         {{-- MAIN CONTENT - FORM --}}
-        <form action="{{ route('rumah.store-penghuni', $house->id) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('warga.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
 
@@ -130,9 +135,20 @@
                 </div>
             </div>
 
+            <div class="mt-8">
+                <label for="house" class="block mb-2 text-sm font-medium">Rumah Penghuni</label>
+                <select id="house" name="house"
+                    class="block w-full rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    @foreach ($house as $item)
+                        <option value="{{ $item->id }}" {{ old('house') == $item->id ? 'selected' : '' }}>
+                            {{ $item->house_number }}</option>
+                    @endforeach
+                </select>
+            </div>
+
             {{-- Tombol Aksi --}}
             <div class="flex justify-end mt-8 gap-x-2">
-                <a href="{{ route('rumah.show', $house->id) }}"
+                <a href="{{ route('warga.index') }}"
                     class="inline-flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-gray-700 align-middle transition-all bg-white border rounded-lg shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600">
                     Batal
                 </a>
@@ -142,27 +158,42 @@
                 </button>
             </div>
         </form>
+
+
     </div>
-@endsection
 
-{{-- Skrip untuk menangani pratinjau gambar (image preview) --}}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const identityPhotoInput = document.getElementById('identity_photo_input');
-        const imagePreview = document.getElementById('image-preview');
-        const placeholder = document.getElementById('placeholder');
 
-        identityPhotoInput.addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    imagePreview.src = e.target.result;
-                    imagePreview.classList.remove('hidden');
-                    placeholder.classList.add('hidden');
-                }
-                reader.readAsDataURL(file);
+    {{-- Skrip untuk menangani pratinjau gambar (image preview) --}}
+    <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
+    <script>
+        new TomSelect("#house", {
+            create: true,
+            sortField: {
+                field: "text",
+                direction: "asc"
             }
         });
-    });
-</script>
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const identityPhotoInput = document.getElementById('identity_photo_input');
+            const imagePreview = document.getElementById('image-preview');
+            const placeholder = document.getElementById('placeholder');
+
+            identityPhotoInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        imagePreview.src = e.target.result;
+                        imagePreview.classList.remove('hidden');
+                        placeholder.classList.add('hidden');
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+    </script>
+
+@endsection

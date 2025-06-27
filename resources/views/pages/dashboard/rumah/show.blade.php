@@ -139,32 +139,36 @@
                         </button>
                     </a>
                 </div>
-                <div class="space-y-4">
+                <div class="space-y-4 max-h-[400px] overflow-y-auto pr-2">
                     {{-- Loop melalui data penghuni yang berhubungan dengan rumah ini. --}}
                     {{-- Asumsi: $house memiliki relasi 'residents' -> $house->residents --}}
                     {{-- {{$house->houseResidents}} --}}
-                    @forelse ($house->houseResidents ?? [] as $resident)
+                    @forelse ($house->houseResidents->whereNull('date_of_exit') ?? [] as $resident)
                         <div class="p-4 border rounded-lg">
                             <dl class="grid grid-cols-1 gap-4 sm:grid-cols-4">
                                 {{-- nama penghuni --}}
                                 <div>
                                     <dt class="text-sm font-medium text-gray-500">Nama Penghuni</dt>
-                                    <dd class="mt-1 text-base font-semibold text-gray-900">{{ $resident->resident->name }}
-                                    </dd>
+                                    <a href="{{ route('rumah.show-penghuni', ['house' => $house->id, 'resident' => $resident->resident->id]) }}"
+                                        class="cursor-pointer">
+                                        <dd class="mt-1 text-base font-semibold text-gray-900">
+                                            {{ $resident->resident->name }}
+                                        </dd>
+                                    </a>
                                 </div>
                                 {{-- tanggal masuk --}}
                                 <div>
                                     <dt class="text-sm font-medium text-gray-500">Tanggal Masuk</dt>
                                     {{-- Menggunakan Carbon untuk memformat tanggal agar mudah dibaca --}}
                                     <dd class="mt-1 text-base text-gray-900">
-                                        {{ \Carbon\Carbon::parse($resident->move_in_date)->isoFormat('D MMMM YYYY') }}</dd>
+                                        {{ \Carbon\Carbon::parse($resident->date_of_entry)->isoFormat('D MMMM YYYY') }}</dd>
                                 </div>
                                 {{-- tanggal keluar --}}
                                 <div>
                                     <dt class="text-sm font-medium text-gray-500">Tanggal Keluar</dt>
                                     <dd class="mt-1 text-base text-gray-900">
-                                        @if ($resident->move_out_date)
-                                            {{ \Carbon\Carbon::parse($resident->move_out_date)->isoFormat('D MMMM YYYY') }}
+                                        @if ($resident->date_of_exit)
+                                            {{ \Carbon\Carbon::parse($resident->date_of_exit)->isoFormat('D MMMM YYYY') }}
                                         @else
                                             <span class="italic text-gray-500">-</span>
                                         @endif
@@ -174,7 +178,7 @@
                                     <dt class="text-sm font-medium text-gray-500">Status</dt>
                                     {{-- Menggunakan Carbon untuk memformat tanggal agar mudah dibaca --}}
                                     <dd class="mt-1 text-base text-gray-900">
-                                        @if ($resident->move_out_date)
+                                        @if ($resident->date_of_exit)
                                             <span class="italic text-gray-500">Tidak Menghuni</span>
                                         @else
                                             <span class="italic text-gray-500">Masih Menghuni</span>
@@ -192,12 +196,77 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
-                            <p>Saat ini belum ada riwayat penghuni yang terdaftar di rumah ini.</p>
+                            <p>Saat ini belum ada penghuni aktif yang terdaftar di rumah ini.</p>
                         </div>
                     @endforelse
                 </div>
             </div>
         </div>
+        {{-- history --}}
+        <div class="flex items-center justify-between mt-10">
+            <h2 class="mb-4 text-lg font-semibold text-gray-900">History Penghuni</h2>
+        </div>
+        <div class="space-y-4">
+            {{-- Loop melalui data penghuni yang berhubungan dengan rumah ini. --}}
+            {{-- Asumsi: $house memiliki relasi 'residents' -> $house->residents --}}
+            {{-- {{$house->houseResidents}} --}}
+            @forelse ($history->houseResidents->whereNotNull('date_of_exit') ?? [] as $resident)
+                <div class="p-4 border rounded-lg">
+                    <dl class="grid grid-cols-1 gap-4 sm:grid-cols-4">
+                        {{-- nama penghuni --}}
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">Nama Penghuni</dt>
+                            <a href="{{ route('rumah.show-penghuni', ['house' => $house->id, 'resident' => $resident->resident->id]) }}"
+                                class="cursor-pointer">
+                                <dd class="mt-1 text-base font-semibold text-gray-900">{{ $resident->resident->name }}
+                                </dd>
+                            </a>
+                        </div>
+                        {{-- tanggal masuk --}}
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">Tanggal Masuk</dt>
+                            {{-- Menggunakan Carbon untuk memformat tanggal agar mudah dibaca --}}
+                            <dd class="mt-1 text-base text-gray-900">
+                                {{ \Carbon\Carbon::parse($resident->date_of_entry)->isoFormat('D MMMM YYYY') }}</dd>
+                        </div>
+                        {{-- tanggal keluar --}}
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">Tanggal Keluar</dt>
+                            <dd class="mt-1 text-base text-gray-900">
+                                @if ($resident->date_of_exit)
+                                    {{ \Carbon\Carbon::parse($resident->date_of_exit)->isoFormat('D MMMM YYYY') }}
+                                @else
+                                    <span class="italic text-gray-500">-</span>
+                                @endif
+                            </dd>
+                        </div>
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">Status</dt>
+                            {{-- Menggunakan Carbon untuk memformat tanggal agar mudah dibaca --}}
+                            <dd class="mt-1 text-base text-gray-900">
+                                @if ($resident->date_of_exit)
+                                    <span class="italic text-gray-500">Tidak Menghuni</span>
+                                @else
+                                    <span class="italic text-gray-500">Masih Menghuni</span>
+                                @endif
+                            </dd>
+                        </div>
+
+                    </dl>
+                </div>
+            @empty
+                {{-- Pesan yang ditampilkan jika tidak ada penghuni --}}
+                <div class="p-6 text-center text-gray-500 border-2 border-dashed rounded-lg">
+                    <svg class="w-12 h-12 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <p>Saat ini belum ada history penghuni yang terdaftar di rumah ini.</p>
+                </div>
+            @endforelse
+        </div>
+
         <div x-show="deleteModalOpen" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0"
             x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200"
             x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
@@ -216,7 +285,7 @@
                     </svg>
                     <h3 class="mt-5 text-lg font-semibold text-gray-900">Hapus Data Rumah</h3>
                     <p class="mt-2 text-sm text-gray-600">
-                        Anda yakin ingin menghapus data rumah **{{ $house->house_number }}**? Tindakan ini tidak dapat
+                        Anda yakin ingin menghapus data rumah {{ $house->house_number }}? Tindakan ini tidak dapat
                         dibatalkan.
                     </p>
                 </div>

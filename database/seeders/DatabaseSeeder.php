@@ -29,43 +29,43 @@ class DatabaseSeeder extends Seeder
         ]);
         // Jenis Iuran
         $this->call(FeeTypeSeeder::class);
-        // Buat 5 rumah dan 5 penghuni
-        $residents = Resident::factory()->count(10)->create();
-        $houses = House::factory()->count(10)->create();
-        $feeTypes = FeeType::all();
+        // // Buat 5 rumah dan 5 penghuni
+        // $residents = Resident::factory()->count(10)->create();
+        // $houses = House::factory()->count(10)->create();
+        // $feeTypes = FeeType::all();
 
-        // Buat hubungan house <-> resident
-        foreach ($houses as $index => $house) {
-            $resident = $residents[$index];
+        // // Buat hubungan house <-> resident
+        // foreach ($houses as $index => $house) {
+        //     $resident = $residents[$index];
 
-            HouseResident::factory()->create([
-                'house_id' => $house->id,
-                'resident_id' => $resident->id,
-                'date_of_entry' => now()->subMonths(rand(3, 12)),
-                'date_of_exit' => null, // aktif
-            ]);
+        //     HouseResident::factory()->create([
+        //         'house_id' => $house->id,
+        //         'resident_id' => $resident->id,
+        //         'date_of_entry' => now()->subMonths(rand(3, 12)),
+        //         'date_of_exit' => null, // aktif
+        //     ]);
 
-            // Buat 2 bulan pembayaran untuk masing-masing penghuni
-            for ($i = 0; $i < 2; $i++) {
-                $month = now()->subMonths($i)->month;
-                $year = now()->subMonths($i)->year;
+        //     // Buat 2 bulan pembayaran untuk masing-masing penghuni
+        //     for ($i = 0; $i < 2; $i++) {
+        //         $month = now()->subMonths($i)->month;
+        //         $year = now()->subMonths($i)->year;
 
-                $payment = Payment::factory()->create([
-                    'resident_id' => $resident->id,
-                    'house_id' => $house->id,
-                    'month' => $month,
-                    'year' => $year,
-                ]);
+        //         $payment = Payment::factory()->create([
+        //             'resident_id' => $resident->id,
+        //             'house_id' => $house->id,
+        //             'month' => $month,
+        //             'year' => $year,
+        //         ]);
 
-                foreach ($feeTypes as $fee) {
-                    PaymentDetail::factory()->create([
-                        'payment_id' => $payment->id,
-                        'fee_type_id' => $fee->id,
-                        'amount' => $fee->amount,
-                    ]);
-                }
-            }
-        }
+        //         foreach ($feeTypes as $fee) {
+        //             PaymentDetail::factory()->create([
+        //                 'payment_id' => $payment->id,
+        //                 'fee_type_id' => $fee->id,
+        //                 'amount' => $fee->amount,
+        //             ]);
+        //         }
+        //     }
+        // }
 
     }
 }

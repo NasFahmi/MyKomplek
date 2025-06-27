@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreResidentHouseRequest;
 use App\Models\House;
 use App\Http\Requests\StoreHouseRequest;
 use App\Http\Requests\UpdateHouseRequest;
@@ -59,7 +60,9 @@ class HouseController extends Controller
     public function show(House $house)
     {
         $house = $this->houseService->getHouse($house);
-        return view('pages.dashboard.rumah.show', compact('house'));
+        $history = $this->houseService->getHouse($house);
+        // dd($house->houseResidents->whereNull('date_of_exit'));
+        return view('pages.dashboard.rumah.show', compact('house', 'history'));
     }
 
     /**
@@ -108,17 +111,45 @@ class HouseController extends Controller
         $house = $this->houseService->getHouseById($id);
         return view('pages.dashboard.rumah.create_resident', compact('house'));
     }
-    public function storeResident(StoreHouseRequest $request)
+    public function storeResident(StoreResidentHouseRequest $request, House $house)
     {
-        // validate
+        // / 1. Ambil data yang sudah divalidasi
         $data = $request->validated();
-        // dd($data);
+
+        // 2. Handle file upload untuk 'identity_photo'
+        if ($request->hasFile('identity_photo')) {
+            // Simpan file di 'storage/app/public/identity_photos'
+            // dan dapatkan path-nya untuk disimpan di database.
+            $path = $request->file('identity_photo')->store('identity_photos', 'public');
+            $data['identity_photo'] = $path;
+        }
+
         try {
-            $this->houseService->createHouse($data);
+            // 3. Panggil method yang benar di service untuk MEMBUAT PENGHUNI, bukan rumah
+            $this->houseService->createResidentForHouse($house, $data);
+
+            return redirect()->route('rumah.show', $house->id)->with('success', 'Berhasil Menambahkan Penghuni Rumah.');
         } catch (\Throwable $th) {
-            Log::error('create error', ['error' => $th->getMessage()]);
-            return back()->with('error', 'Terjadi kesalahan saat create rumah.');
-            // throw $th;
+            Log::error('Create resident error', ['error' => $th->getMessage()]);
+            return back()->with('error', 'Terjadi kesalahan saat menambahkan penghuni.');
+        }
+    }
+    public function showResident($house, $resident)
+    {
+        // dd($resident);
+        $houseData = $this->houseService->getHouseById($house);
+        $residentData = $this->houseService->getResidentById($resident);
+        // dd($residentData);
+        return view('pages.dashboard.rumah.resident_show', compact('houseData', 'residentData'));
+    }
+    public function checkoutResident($house, $resident)
+    {
+        try {
+            $resident = $this->houseService->residentCheckout($resident);
+            return redirect()->route('rumah.show', $house)->with('success', 'Berhasil Checkout Warga');
+        } catch (\Throwable $th) {
+            Log::error('Create resident error', ['error' => $th->getMessage()]);
+            return back()->with('error', 'Terjadi kesalahan saat menambahkan penghuni.');
         }
     }
 }

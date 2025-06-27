@@ -32,19 +32,29 @@ Route::middleware('auth')->group(function () {
     Route::get('/rumah/{house}/edit', [HouseController::class, 'edit'])->name('rumah.edit');
     Route::put('/rumah/{house}', [HouseController::class, 'update'])->name('rumah.update');
     Route::delete('/rumah/{house}', [HouseController::class, 'destroy'])->name('rumah.destroy');
-    
+
     // create penghuni from rumah
     Route::get('/rumah/{house}/create-penghuni', [HouseController::class, 'createResident'])->name('rumah.create-penghuni');
     Route::post('/rumah/{house}/create-penghuni', [HouseController::class, 'storeResident'])->name('rumah.store-penghuni');
+
+    //detail penghuni from rumah
+    Route::get('/rumah/{house}/penghuni/{resident}', [HouseController::class, 'showResident'])->name('rumah.show-penghuni');
+
+    // penghuni checkout from rumah
+    Route::patch('/rumah/${house}/penghuni/{resident}/checkout', [HouseController::class, 'checkoutResident'])->name('rumah.show-penghuni-checkout');
 
 
     // Warga
     Route::get('/warga', [ResidentController::class, 'index'])->name('warga.index');
     Route::get('/warga/create', [ResidentController::class, 'create'])->name('warga.create');
     Route::post('/warga/create', [ResidentController::class, 'store'])->name('warga.store');
+    Route::get('/warga/{resident}', [ResidentController::class, 'show'])->name('warga.show');
     Route::get('/warga/{resident}/edit', [ResidentController::class, 'edit'])->name('warga.edit');
     Route::put('/warga/{resident}', [ResidentController::class, 'update'])->name('warga.update');
     Route::delete('/warga/{resident}', [ResidentController::class, 'destroy'])->name('warga.destroy');
+
+    // warga checkout
+    Route::patch('/warga/{resident}', [ResidentController::class, 'checkout'])->name('warga.checkout');
 
     // Pembayaran
     Route::get('/pembayaran', [PaymentController::class, 'index'])->name('pembayaran.index');

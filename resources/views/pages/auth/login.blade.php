@@ -54,7 +54,7 @@
 
                 {{-- Username --}}
                 <div>
-                    <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+                    <label for="username" class="block mb-2 text-sm font-medium text-gray-700">Username</label>
                     <input type="text" name="username" id="username" value="{{ old('username') }}"
                         class="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
                         required autofocus>
@@ -65,7 +65,7 @@
 
                 {{-- Password --}}
                 <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <label for="password" class="block mb-2 text-sm font-medium text-gray-700">Password</label>
                     <input type="password" name="password" id="password"
                         class="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
                         required>

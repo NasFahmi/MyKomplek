@@ -5,6 +5,8 @@ namespace App\Providers;
 use App\Interface\HouseInterface;
 use App\Interface\ResidentInterface;
 use App\Interface\UserInterface;
+use App\Models\HouseResident;
+use App\Observers\HouseResidentObserver;
 use App\Repositories\HouseRepository;
 use App\Repositories\ResidentRepository;
 use App\Repositories\UserRepository;
@@ -29,5 +31,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useTailwind(); // <--- TAMBAHKAN BARIS INI
+        HouseResident::observe(HouseResidentObserver::class);
     }
 }

@@ -1,11 +1,11 @@
 @extends('layout.dashboard')
 {{-- Memperbaiki cara menampilkan title --}}
-@section('title', 'Create Rumah')
+@section('title', 'Tambah Rumah')
 @section('content')
 
     <div class="bg-white rounded-lg shadow p-7">
         <div class="flex flex-col items-start justify-between gap-4 mb-6 sm:flex-row sm:items-center">
-            <h1 class="text-xl font-semibold">Create Rumah</h1>
+            <h1 class="text-xl font-semibold">Tambah Rumah</h1>
 
             <nav class="flex" aria-label="Breadcrumb">
                 <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
@@ -38,7 +38,7 @@
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="m1 9 4-4-4-4" />
                             </svg>
-                            <span class="text-sm font-medium text-gray-500 ms-1 md:ms-2 dark:text-gray-400">Create</span>
+                            <span class="text-sm font-medium text-gray-500 ms-1 md:ms-2 dark:text-gray-400">Tambah</span>
                         </div>
                     </li>
                 </ol>
@@ -98,6 +98,8 @@
             <div>
                 <label for="status" class="block mb-2 text-sm font-medium dark:text-white">Status Rumah</label>
                 <label for="hs-basic-usage" class="relative flex items-center p-3 border border-gray-200 rounded-lg">
+
+                    <input type="hidden" name="status" value="0">
                     <input type="checkbox" id="hs-basic-usage" name="status"
                         class="shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500" value="1">
                     <span class="text-sm text-gray-500 ms-3 dark:text-gray-400">Berpenghuni</span>

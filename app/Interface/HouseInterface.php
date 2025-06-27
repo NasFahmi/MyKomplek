@@ -8,8 +8,10 @@ use App\Interface\Base\GetAllInterface;
 use App\Interface\Base\GetInterface;
 use App\Interface\Base\UpdateInterface;
 use App\Models\House;
+use App\Models\HouseResident;
+use App\Models\Resident;
 
 interface HouseInterface extends CreateInterface, FindInterface, GetAllInterface, UpdateInterface, DeleteInterface, GetInterface
 {
-     public function createResidentByHouse(array $data,string $id);
+     public function createResidentForHouse(House $house, array $data): ?Resident;
 }

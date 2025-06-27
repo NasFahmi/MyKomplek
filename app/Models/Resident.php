@@ -17,9 +17,15 @@ class Resident extends Model
     protected $fillable = [
         'name',
         'identity_photo',
-        'status',
+        'status', //enum ['tetap', 'kontrak']
         'phone_number',
+        'resident_status', //boolean 
         'married_status',
+    ];
+    // cast status to boolean
+    protected $casts = [
+        'married_status' => 'boolean',
+        'resident_status' => 'boolean',
     ];
 
     // Histori rumah yang pernah dihuni

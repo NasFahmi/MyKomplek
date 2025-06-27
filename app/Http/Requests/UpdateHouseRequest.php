@@ -14,7 +14,7 @@ class UpdateHouseRequest extends FormRequest
         return [
             'house_number' => 'required|string',
             'address' => 'required|string',
-            'status' => 'required|boolean',
+            'status' => 'boolean',
         ];
     }
     public function messages()
@@ -22,7 +22,7 @@ class UpdateHouseRequest extends FormRequest
         return [
             'house_number.required' => 'Nomor rumah wajib diisi.',
             'address.required' => 'Alamat wajib diisi.',
-            'status.required' => 'Status wajib diisi.',
+            'status' => 'Status wajib diisi.',
         ];
     }
 }

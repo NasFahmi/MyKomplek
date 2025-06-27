@@ -24,8 +24,8 @@
                         <div class="flex items-center">
                             <svg class="w-3 h-3 mx-1 text-gray-400 rtl:rotate-180" aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                    stroke-width="2" d="m1 9 4-4-4-4" />
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="m1 9 4-4-4-4" />
                             </svg>
                             <a href="{{ route('rumah.index') }}"
                                 class="text-sm font-medium text-gray-700 ms-1 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">Rumah</a>
@@ -35,8 +35,8 @@
                         <div class="flex items-center">
                             <svg class="w-3 h-3 mx-1 text-gray-400 rtl:rotate-180" aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                    stroke-width="2" d="m1 9 4-4-4-4" />
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="m1 9 4-4-4-4" />
                             </svg>
                             <span class="text-sm font-medium text-gray-500 ms-1 md:ms-2 dark:text-gray-400">Edit</span>
                         </div>
@@ -58,10 +58,8 @@
                 <label for="house_number" class="block mb-2 text-sm font-medium text-gray-900">
                     Nomor Rumah
                 </label>
-                <input type="text" id="house_number" name="house_number"
-                    {{-- FIX: Menambahkan data $house sebagai nilai default --}}
-                    value="{{ old('house_number', $house->house_number) }}"
-                    placeholder="Contoh: A-01"
+                <input type="text" id="house_number" name="house_number" {{-- FIX: Menambahkan data $house sebagai nilai default --}}
+                    value="{{ old('house_number', $house->house_number) }}" placeholder="Contoh: A-01"
                     class="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 @error('house_number') border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500 focus:border-red-500 @else border-gray-300 focus:ring-blue-500 focus:border-blue-500 @enderror"
                     required>
                 @error('house_number')
@@ -75,8 +73,7 @@
                 <label for="address" class="block mb-2 text-sm font-medium text-gray-900">
                     Alamat Lengkap
                 </label>
-                <input type="text" id="address" name="address"
-                    {{-- FIX: Menambahkan data $house sebagai nilai default --}}
+                <input type="text" id="address" name="address" {{-- FIX: Menambahkan data $house sebagai nilai default --}}
                     value="{{ old('address', $house->address) }}" placeholder="Contoh: Jl. Merdeka No. 10"
                     class="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 @error('address') border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500 focus:border-red-500 @else border-gray-300 focus:ring-blue-500 focus:border-blue-500 @enderror"
                     required>
@@ -85,17 +82,23 @@
                 @enderror
             </div>
 
-            {{-- Status --}}
+            {{-- Status Rumah --}}
             <div class="mb-6">
-                <label class="block mb-2 text-sm font-medium dark:text-white">Status Rumah</label>
+                <label class="block mb-2 text-sm font-medium">Status Rumah</label>
                 <label for="status-checkbox" class="relative flex items-center p-3 border border-gray-200 rounded-lg">
+
+                    {{-- FIX: Hidden input untuk memastikan nilai '0' terkirim jika checkbox tidak dicentang --}}
+                    <input type="hidden" name="status" value="0">
+
+                    {{-- Checkbox yang sebenarnya. Nilai "1" akan menimpa "0" jika dicentang. --}}
                     <input type="checkbox" id="status-checkbox" name="status"
                         class="shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500" value="1"
-                        {{-- FIX: Menambahkan kondisi 'checked' berdasarkan data $house --}}
-                        {{ old('status', $house->status) ? 'checked' : '' }}>
-                    <span class="text-sm text-gray-500 ms-3 dark:text-gray-400">Berpenghuni</span>
+                        @if (old('status', $house->status)) checked @endif>
+
+                    <span class="text-sm text-gray-500 ms-3">Berpenghuni</span>
                 </label>
             </div>
+
 
             {{-- Tombol Aksi --}}
             <div class="flex justify-end mt-8 gap-x-2">

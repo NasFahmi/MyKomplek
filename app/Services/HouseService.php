@@ -2,16 +2,20 @@
 
 namespace App\Services;
 use App\Interface\HouseInterface;
+use App\Interface\ResidentInterface;
 use App\Models\House;
+use App\Models\Resident;
 use Illuminate\Database\Eloquent\Collection;
 
 class HouseService
 {
     protected HouseInterface $houseRepository;
+    protected ResidentInterface $residentRepository;
 
-    public function __construct(HouseInterface $houseRepository)
+    public function __construct(HouseInterface $houseRepository, ResidentInterface $residentRepository)
     {
         $this->houseRepository = $houseRepository;
+        $this->residentRepository = $residentRepository;
     }
     public function getAllHouse(): Collection
     {
@@ -37,8 +41,18 @@ class HouseService
     {
         $this->houseRepository->delete($id);
     }
-    public function createResidentByHouse(array $data, string $id): ?House
+    public function createResidentForHouse(House $house, array $data): ?Resident
     {
-        return $this->houseRepository->createResidentByHouse($data, $id);
+        // Panggil repository untuk berinteraksi dengan database
+        return $this->houseRepository->createResidentForHouse($house, $data);
+    }
+    public function getResidentById($id){
+        return $this->residentRepository->get($id);
+    }
+    public function residentCheckout($id){
+        return $this->residentRepository->residentCheckout($id);
+    }
+    public function getHistoryResident(){
+        return $this->residentRepository->getHistoryResident();
     }
 }
