@@ -2,18 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Expense;
-use App\Http\Requests\StoreExpenseRequest;
-use App\Http\Requests\UpdateExpenseRequest;
+use Illuminate\Http\Request;
 
-class ExpenseController extends Controller
+class DashboardController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('pages.dashboard.pengeluaran.index');
+        return view('pages.dashboard.index');
     }
 
     /**
@@ -27,7 +25,7 @@ class ExpenseController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreExpenseRequest $request)
+    public function store(Request $request)
     {
         //
     }
@@ -35,7 +33,7 @@ class ExpenseController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Expense $expense)
+    public function show(string $id)
     {
         //
     }
@@ -43,7 +41,7 @@ class ExpenseController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Expense $expense)
+    public function edit(string $id)
     {
         //
     }
@@ -51,7 +49,7 @@ class ExpenseController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateExpenseRequest $request, Expense $expense)
+    public function update(Request $request, string $id)
     {
         //
     }
@@ -59,7 +57,7 @@ class ExpenseController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Expense $expense)
+    public function destroy(string $id)
     {
         //
     }

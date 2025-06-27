@@ -5,15 +5,25 @@ namespace App\Http\Controllers;
 use App\Models\House;
 use App\Http\Requests\StoreHouseRequest;
 use App\Http\Requests\UpdateHouseRequest;
+use App\Services\HouseService;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Contracts\View\View;
 
 class HouseController extends Controller
 {
+    protected HouseService $houseService;
+
+    public function __construct(HouseService $houseService)
+    {
+        $this->houseService = $houseService;
+    }
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): View
     {
-        //
+        $houses = $this->houseService->getAllHouse();
+        return view('pages.dashboard.rumah.index', compact('houses'));
     }
 
     /**
@@ -21,7 +31,7 @@ class HouseController extends Controller
      */
     public function create()
     {
-        //
+        return view('pages.dashboard.rumah.create');
     }
 
     /**
@@ -29,7 +39,18 @@ class HouseController extends Controller
      */
     public function store(StoreHouseRequest $request)
     {
-        //
+        // validate
+        $data = $request->validated();
+        Log::info($data);
+        try {
+            $this->houseService->createHouse($data);
+            return redirect()->route('rumah.index')->with('success', 'Rumah berhasil ditambahkan.');
+        } catch (\Throwable $th) {
+            Log::error('create error', ['error' => $th->getMessage()]);
+            return back()->with('error', 'Terjadi kesalahan saat create rumah.');
+            // throw $th;
+        }
+
     }
 
     /**
@@ -37,7 +58,8 @@ class HouseController extends Controller
      */
     public function show(House $house)
     {
-        //
+        $house = $this->houseService->getHouse($house);
+        return view('pages.dashboard.rumah.show', compact('house'));
     }
 
     /**
@@ -45,7 +67,8 @@ class HouseController extends Controller
      */
     public function edit(House $house)
     {
-        //
+        $house = $this->houseService->getHouse($house);
+        return view('pages.dashboard.rumah.edit', compact('house'));
     }
 
     /**
@@ -53,7 +76,17 @@ class HouseController extends Controller
      */
     public function update(UpdateHouseRequest $request, House $house)
     {
-        //
+        // validate
+        $data = $request->validated();
+        // dd($data);
+        try {
+            $this->houseService->updateHouse($data, $house->id);
+            return redirect()->route('rumah.show', $house->id)->with('success', 'Rumah berhasil diupdate.');
+        } catch (\Throwable $th) {
+            Log::error('update error', ['error' => $th->getMessage()]);
+            return back()->with('error', 'Terjadi kesalahan saat update rumah.');
+            // throw $th;
+        }
     }
 
     /**
@@ -61,6 +94,31 @@ class HouseController extends Controller
      */
     public function destroy(House $house)
     {
-        //
+        try {
+            $this->houseService->deleteHouse($house->id);
+            return redirect()->route('rumah.index')->with('success', 'Rumah berhasil dihapus');
+        } catch (\Throwable $th) {
+            Log::error('delete error', ['error' => $th->getMessage()]);
+            return back()->with('error', 'Terjadi kesalahan saat delete rumah.');
+        }
+    }
+
+    public function createResident($id)
+    {
+        $house = $this->houseService->getHouseById($id);
+        return view('pages.dashboard.rumah.create_resident', compact('house'));
+    }
+    public function storeResident(StoreHouseRequest $request)
+    {
+        // validate
+        $data = $request->validated();
+        // dd($data);
+        try {
+            $this->houseService->createHouse($data);
+        } catch (\Throwable $th) {
+            Log::error('create error', ['error' => $th->getMessage()]);
+            return back()->with('error', 'Terjadi kesalahan saat create rumah.');
+            // throw $th;
+        }
     }
 }

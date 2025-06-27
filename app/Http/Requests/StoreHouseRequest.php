@@ -11,7 +11,7 @@ class StoreHouseRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return auth()->check();
     }
 
     /**
@@ -22,7 +22,17 @@ class StoreHouseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'house_number' => 'required|string',
+            'address' => 'required|string',
+            'status' => 'required|boolean',
+        ];
+    }
+    public function messages()
+    {
+        return [
+            'house_number.required' => 'Nomor rumah wajib diisi.',
+            'address.required' => 'Alamat wajib diisi.',
+            'status.required' => 'Status wajib diisi.',
         ];
     }
 }

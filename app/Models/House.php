@@ -19,6 +19,7 @@ class House extends Model
 
     protected $fillable = [
         'house_number',
+        'address',
         'status',
     ];
     protected $guarded = ['id'];

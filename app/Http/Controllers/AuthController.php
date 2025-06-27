@@ -26,7 +26,7 @@ class AuthController extends Controller
         try {
             $data = $request->validated();
             if ($this->userService->login($data)) {
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboard.index')->with('success', 'Login berhasil.');
             }
             return back()->with('error', 'Username atau password salah.');
 

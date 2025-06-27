@@ -1,6 +1,18 @@
-@import "flowbite/src/themes/default";
+
+/* Tailwind base styles - HARUS berada di atas */
+/* @import "tailwindcss"; */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@plugin "flowbite/plugin";
-@source "../../node_modules/flowbite";
+
+
+/* Preline UI */
+@import "../../node_modules/preline/variants.css";
+@source "../../node_modules/preline/dist/*.js";
+
+
+.dt-layout-row:has(.dt-search),
+.dt-layout-row:has(.dt-length),
+.dt-layout-row:has(.dt-paging) {
+  display: none !important;
+}

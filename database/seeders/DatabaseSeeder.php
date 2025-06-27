@@ -30,8 +30,8 @@ class DatabaseSeeder extends Seeder
         // Jenis Iuran
         $this->call(FeeTypeSeeder::class);
         // Buat 5 rumah dan 5 penghuni
-        $residents = Resident::factory()->count(5)->create();
-        $houses = House::factory()->count(5)->create();
+        $residents = Resident::factory()->count(10)->create();
+        $houses = House::factory()->count(10)->create();
         $feeTypes = FeeType::all();
 
         // Buat hubungan house <-> resident

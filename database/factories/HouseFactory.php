@@ -20,6 +20,7 @@ class HouseFactory extends Factory
         return [
             'id' => Str::uuid(),
             'house_number' => 'A' . $this->faker->numberBetween(1, 99),
+            'address'=> $this->faker->address(),
             'status' => $this->faker->boolean(),
         ];
     }

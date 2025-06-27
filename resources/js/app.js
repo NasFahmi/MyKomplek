@@ -1,4 +1,6 @@
 import './bootstrap';
+// index.js
+import 'preline'
 
 import Alpine from 'alpinejs';
 

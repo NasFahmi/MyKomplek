@@ -5,15 +5,23 @@ namespace App\Http\Controllers;
 use App\Models\Resident;
 use App\Http\Requests\StoreResidentRequest;
 use App\Http\Requests\UpdateResidentRequest;
+use App\Services\ResidentService;
+use Illuminate\Http\Request;
 
 class ResidentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    protected ResidentService $ResidentService;
+
+    public function __construct(ResidentService $ResidentService)
     {
-        //
+        $this->ResidentService = $ResidentService;
+    }
+
+    public function index(Request $request)
+    {
+        $resident = $this->ResidentService->getAllResident();
+        // $resident = Resident::paginate(100000);
+        return view('pages.dashboard.warga.index', compact('resident'));
     }
 
     /**

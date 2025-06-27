@@ -1,0 +1,113 @@
+@extends('layout.dashboard')
+{{-- Memperbaiki cara menampilkan title --}}
+@section('title', 'Edit Rumah ' . $house->house_number)
+@section('content')
+
+    <div class="bg-white rounded-lg shadow p-7">
+        <div class="flex flex-col items-start justify-between gap-4 mb-6 sm:flex-row sm:items-center">
+            <h1 class="text-xl font-semibold">Edit Rumah {{ $house->house_number }}</h1>
+
+            <nav class="flex" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+                    <li class="inline-flex items-center">
+                        <a href="#"
+                            class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                            <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z" />
+                            </svg>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <div class="flex items-center">
+                            <svg class="w-3 h-3 mx-1 text-gray-400 rtl:rotate-180" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" d="m1 9 4-4-4-4" />
+                            </svg>
+                            <a href="{{ route('rumah.index') }}"
+                                class="text-sm font-medium text-gray-700 ms-1 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">Rumah</a>
+                        </div>
+                    </li>
+                    <li aria-current="page">
+                        <div class="flex items-center">
+                            <svg class="w-3 h-3 mx-1 text-gray-400 rtl:rotate-180" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" d="m1 9 4-4-4-4" />
+                            </svg>
+                            <span class="text-sm font-medium text-gray-500 ms-1 md:ms-2 dark:text-gray-400">Edit</span>
+                        </div>
+                    </li>
+                </ol>
+            </nav>
+        </div>
+        <hr class="mb-6">
+
+        {{-- ====================================================== --}}
+        {{-- MAIN CONTENT - FORM --}}
+        {{-- ====================================================== --}}
+        <form action="{{ route('rumah.update', $house->id) }}" method="POST">
+            @csrf
+            @method('PUT') {{-- PENTING: Menambahkan method spoofing untuk request UPDATE --}}
+
+            {{-- Nomor Rumah --}}
+            <div class="mb-4">
+                <label for="house_number" class="block mb-2 text-sm font-medium text-gray-900">
+                    Nomor Rumah
+                </label>
+                <input type="text" id="house_number" name="house_number"
+                    {{-- FIX: Menambahkan data $house sebagai nilai default --}}
+                    value="{{ old('house_number', $house->house_number) }}"
+                    placeholder="Contoh: A-01"
+                    class="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 @error('house_number') border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500 focus:border-red-500 @else border-gray-300 focus:ring-blue-500 focus:border-blue-500 @enderror"
+                    required>
+                @error('house_number')
+                    <p class="mt-2 text-sm text-red-600"><span class="font-medium">Oops!</span> {{ $message }}</p>
+                @enderror
+            </div>
+
+
+            {{-- Alamat Lengkap --}}
+            <div class="mb-4">
+                <label for="address" class="block mb-2 text-sm font-medium text-gray-900">
+                    Alamat Lengkap
+                </label>
+                <input type="text" id="address" name="address"
+                    {{-- FIX: Menambahkan data $house sebagai nilai default --}}
+                    value="{{ old('address', $house->address) }}" placeholder="Contoh: Jl. Merdeka No. 10"
+                    class="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 @error('address') border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500 focus:border-red-500 @else border-gray-300 focus:ring-blue-500 focus:border-blue-500 @enderror"
+                    required>
+                @error('address')
+                    <p class="mt-2 text-sm text-red-600"><span class="font-medium">Oops!</span> {{ $message }}</p>
+                @enderror
+            </div>
+
+            {{-- Status --}}
+            <div class="mb-6">
+                <label class="block mb-2 text-sm font-medium dark:text-white">Status Rumah</label>
+                <label for="status-checkbox" class="relative flex items-center p-3 border border-gray-200 rounded-lg">
+                    <input type="checkbox" id="status-checkbox" name="status"
+                        class="shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500" value="1"
+                        {{-- FIX: Menambahkan kondisi 'checked' berdasarkan data $house --}}
+                        {{ old('status', $house->status) ? 'checked' : '' }}>
+                    <span class="text-sm text-gray-500 ms-3 dark:text-gray-400">Berpenghuni</span>
+                </label>
+            </div>
+
+            {{-- Tombol Aksi --}}
+            <div class="flex justify-end mt-8 gap-x-2">
+                <a href="{{ route('rumah.show', $house->id) }}"
+                    class="inline-flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-gray-700 align-middle transition-all bg-white border rounded-lg shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600">
+                    Batal
+                </a>
+                <button type="submit"
+                    class="inline-flex items-center justify-center gap-2 px-4 py-3 text-sm font-semibold text-white transition-all bg-blue-500 border border-transparent rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    Simpan Perubahan
+                </button>
+            </div>
+        </form>
+    </div>
+@endsection
