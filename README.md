@@ -1,61 +1,165 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <img src="doc/image/logo.png" alt="Logo Proyek" width="280"/>
 </p>
 
-## About Laravel
+## 📌 Tentang Proyek
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Proyek ini adalah sistem manajemen RT berbasis web yang dibangun menggunakan Laravel 12. Sistem ini memungkinkan pengelolaan rumah, penghuni, pembayaran iuran, hingga laporan keuangan bulanan dengan UI yang modern menggunakan Tailwind, Flowbite, dan Preline.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+<hr>
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+#### 🖼️ Screenshot Website
 
-## Learning Laravel
+<details>
+  <summary><strong>📌 Dashboard</strong></summary>
+  <p align="center">
+    <img src="doc/image/dashboard.png" alt="Dashboard" width="800"/>
+  </p>
+</details>
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+<details>
+  <summary><strong>📝 Payment</strong></summary>
+  <p align="center">
+    <img src="doc/image/payment.png" alt="Form Tambah" width="800"/>
+  </p>
+</details>
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+<details>
+  <summary><strong>📱 Tampilan Mobile</strong></summary>
+  <p align="center">
+    <img src="doc/image/mobile_payment.png" alt="Mobile View" width="400"/>
+  </p>
+</details>
+<hr>
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 🚀 Fitur Utama
 
-## Laravel Sponsors
+<details>
+  <summary>🏠 <strong>Dashboard</strong></summary>
+  <ul>
+    <li>Menampilkan ringkasan data penting seperti jumlah rumah, penghuni, total pemasukan, dan pengeluaran secara real-time.</li>
+  </ul>
+</details>
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+<details>
+  <summary>🏡 <strong>Manajemen Rumah</strong></summary>
+  <ul>
+    <li>Kelola data rumah, status hunian (tetap / kontrak), dan histori kepemilikan atau penyewaan.</li>
+  </ul>
+</details>
 
-### Premium Partners
+<details>
+  <summary>👨‍👩‍👧‍👦 <strong>Manajemen Penghuni / Warga</strong></summary>
+  <ul>
+    <li>Tambah, edit, dan kelola data penghuni lengkap dengan status domisili dan relasi keluarga.</li>
+  </ul>
+</details>
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+<details>
+  <summary>💳 <strong>Manajemen Pembayaran</strong></summary>
+  <ul>
+    <li>Catat dan pantau pembayaran iuran warga seperti kebersihan dan keamanan, termasuk status lunas atau tunggakan.</li>
+  </ul>
+</details>
 
-## Contributing
+<details>
+  <summary>💸 <strong>Manajemen Pengeluaran</strong></summary>
+  <ul>
+    <li>Dokumentasikan pengeluaran kas RT, lengkap dengan tanggal, deskripsi, dan nominal.</li>
+  </ul>
+</details>
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+<details>
+  <summary>📊 <strong>Grafik Pengeluaran vs Pemasukan</strong></summary>
+  <ul>
+    <li>Visualisasi data keuangan bulanan dalam bentuk grafik batang atau garis untuk memudahkan analisis.</li>
+  </ul>
+</details>
 
-## Code of Conduct
+<details>
+  <summary>⚙️ <strong>Pengaturan</strong></summary>
+  <ul>
+    <li>Konfigurasi sistem dasar seperti pengguna/admin sistem,</li>
+  </ul>
+</details>
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+<hr>
 
-## Security Vulnerabilities
+## ⚙️ Tutorial
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+#### 🧾 Persyaratan
 
-## License
+<h4> Pastikan sistem kamu telah terpasang: </h4>
+<ul>
+    <li>PHP >= 8.2</li>
+    <li>Composer</li>
+    <li>Node.js & NPM</li>
+    <li>MySQL / MariaDB</li>
+</il>
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+#### 1. 🚀 Clone Repository dari GitHub
+
+
+```bash
+git clone https://github.com/NasFahmi/MyKomplek
+cd MyKomplek
+```
+
+####  2. ⚙️ Setting Enviroment 
+eksekusi comand ini di gitbash/cmd <br>
+
+```bash
+cp .env.example .env
+composer install
+npm install
+php artisan key:generate
+```
+
+
+#### 3. 📂 Setting Database
+Buat Database bernama "mykomplek" <br>
+copy code ini ke .env
+
+```bash
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=mykomplek
+DB_USERNAME=root #user default
+DB_PASSWORD=
+```
+
+#### 5. 🛠️ Migrasi dan Seeder 
+Jalankan perintah berikut untuk membuat tabel dan data awal: <br>
+
+```bash
+php artisan migrate:fresh --seed
+```
+
+
+#### 6. 🌐 Jalankan Server Laravel
+
+```bash
+composer run dev
+```
+jika menggunakan laravel versi 11 kebawah jalankan 2 terminal ini
+terminal 1 run laravel:
+```bash
+php artisan serve
+```
+terminal 2 run run dev:
+```bash
+npm run dev
+```
+
+Aplikasi akan berjalan di:
+```bash
+http://127.0.0.1:8000
+```
+
+##  Lisensi
+This project was developed by [Nasrul Fahmi](https://github.com/NasFahmi) and is released as open-source software under the following license:
+
+**© 2025 Nasrul Fahmi. All rights reserved.**
+
+Licensed under the terms of the [MIT License](LICENSE)
