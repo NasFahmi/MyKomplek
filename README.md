@@ -6,6 +6,13 @@
 
 Proyek ini adalah sistem manajemen RT berbasis web yang dibangun menggunakan Laravel 12. Sistem ini memungkinkan pengelolaan rumah, penghuni, pembayaran iuran, hingga laporan keuangan bulanan dengan UI yang modern menggunakan Tailwind, Flowbite, dan Preline.
 
+<details>
+  <summary><strong>⚙️ ERD</strong></summary>
+  <p align="center">
+    <img src="doc/image/erd.png" alt="Dashboard" width="800"/>
+  </p>
+</details>
+
 <hr>
 
 #### 🖼️ Screenshot Website
