@@ -25,6 +25,13 @@ Proyek ini adalah sistem manajemen RT berbasis web yang dibangun menggunakan Lar
 </details>
 
 <details>
+  <summary><strong>📈 Chart</strong></summary>
+  <p align="center">
+    <img src="doc/image/chart.png" alt="Mobile View" width="400"/>
+  </p>
+</details>
+
+<details>
   <summary><strong>📱 Tampilan Mobile</strong></summary>
   <p align="center">
     <img src="doc/image/mobile_payment.png" alt="Mobile View" width="400"/>
