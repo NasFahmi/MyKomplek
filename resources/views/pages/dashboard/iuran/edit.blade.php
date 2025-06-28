@@ -103,7 +103,7 @@
 
                 {{-- Status  --}}
                 <div>
-                    <label for="status" class="block mb-2 text-sm font-medium dark:text-white">Status Iuran</label>
+                    <label for="status" class="block mb-2 text-sm font-medium ">Status Iuran</label>
                     <label for="hs-basic-usage" class="relative flex items-center p-3 border border-gray-200 rounded-lg">
 
                         <input type="hidden" name="is_active" value="0">

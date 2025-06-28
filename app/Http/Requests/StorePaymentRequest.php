@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class StorePaymentRequest extends FormRequest
 {
@@ -62,4 +64,55 @@ class StorePaymentRequest extends FormRequest
 
         ];
     }
+
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            if (!isset($this->fees))
+                return;
+
+            foreach ($this->fees as $feeId => $fee) {
+                $start = intval($fee['start_year']) * 100 + intval($fee['start_month']);
+                $end = intval($fee['end_year']) * 100 + intval($fee['end_month']);
+
+                if ($start > $end) {
+                    $validator->errors()->add("fees.$feeId.start_month", 'Tanggal mulai harus lebih kecil atau sama dengan tanggal akhir.');
+                    $validator->errors()->add("fees.$feeId.start_year", 'Tanggal mulai harus lebih kecil atau sama dengan tanggal akhir.');
+                }
+            }
+        });
+    }
+
+    public function failedValidation(Validator $validator)
+    {
+        // Cek apakah kesalahan berasal dari periode tanggal (custom logic)
+        $customError = null;
+
+        foreach ($this->fees as $feeId => $fee) {
+            $start = intval($fee['start_year']) * 100 + intval($fee['start_month']);
+            $end = intval($fee['end_year']) * 100 + intval($fee['end_month']);
+
+            if ($start > $end) {
+                $customError = 'Tanggal mulai iuran tidak boleh lebih besar dari tanggal akhir.';
+                break;
+            }
+        }
+
+        // Jika custom error ditemukan, tampilkan sebagai session flash message
+        if ($customError) {
+            session()->flash('error', $customError);
+            throw new HttpResponseException(
+                redirect()->back()->withInput()
+            );
+        }
+
+        // Jika bukan error custom, jalankan default handler
+        throw new HttpResponseException(
+            redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+        );
+    }
+
 }
