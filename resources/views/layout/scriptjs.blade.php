@@ -5,6 +5,8 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.min.css">
 <script src="https://cdn.datatables.net/2.3.2/js/dataTables.min.js"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+
 {{-- <script src="./assets/vendor/lodash/lodash.min.js"></script>
 <script src="./assets/vendor/dropzone/dist/dropzone-min.js"></script> --}}
 

@@ -52,7 +52,5 @@ class HouseService
     public function residentCheckout($id){
         return $this->residentRepository->residentCheckout($id);
     }
-    public function getHistoryResident(){
-        return $this->residentRepository->getHistoryResident();
-    }
+   
 }

@@ -9,63 +9,100 @@ use App\Models\Payment;
 use App\Models\PaymentDetail;
 use App\Models\Resident;
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Carbon;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
-
+        // 1. Create Admin User
         User::factory()->create([
             'name' => 'Pak RT',
             'email' => 'test@gmail.com',
-            'username'=>'pakrt',
+            'username' => 'pakrt',
             'password' => bcrypt('password'),
         ]);
-        // Jenis Iuran
+
+        // 2. Seed Fee Types (with historical versions)
         $this->call(FeeTypeSeeder::class);
-        // // Buat 5 rumah dan 5 penghuni
-        // $residents = Resident::factory()->count(10)->create();
+        $feeTypes = FeeType::all();
+
+        // 3. Create Houses and Residents
         // $houses = House::factory()->count(10)->create();
-        // $feeTypes = FeeType::all();
+        // $residents = Resident::factory()->count(20)->create(); // Increased to 20 to ensure enough residents
 
-        // // Buat hubungan house <-> resident
+        // // 4. Assign Residents to Houses (with some houses having multiple residents over time)
         // foreach ($houses as $index => $house) {
-        //     $resident = $residents[$index];
-
+        //     // Current resident - use modulo to ensure we don't exceed array bounds
+        //     $currentResident = $residents[$index % count($residents)];
+            
         //     HouseResident::factory()->create([
         //         'house_id' => $house->id,
-        //         'resident_id' => $resident->id,
+        //         'resident_id' => $currentResident->id,
         //         'date_of_entry' => now()->subMonths(rand(3, 12)),
-        //         'date_of_exit' => null, // aktif
+        //         'date_of_exit' => null,
         //     ]);
 
-        //     // Buat 2 bulan pembayaran untuk masing-masing penghuni
-        //     for ($i = 0; $i < 2; $i++) {
-        //         $month = now()->subMonths($i)->month;
-        //         $year = now()->subMonths($i)->year;
+        //     // For some houses, add previous residents
+        //     if ($index % 3 === 0) {
+        //         // Use different resident - ensure index is valid
+        //         $prevResidentIndex = ($index + 10) % count($residents);
+        //         $prevResident = $residents[$prevResidentIndex];
 
-        //         $payment = Payment::factory()->create([
-        //             'resident_id' => $resident->id,
+        //         HouseResident::factory()->create([
         //             'house_id' => $house->id,
-        //             'month' => $month,
-        //             'year' => $year,
+        //             'resident_id' => $prevResident->id,
+        //             'date_of_entry' => now()->subMonths(rand(15, 24)),
+        //             'date_of_exit' => now()->subMonths(rand(5, 10)),
         //         ]);
-
-        //         foreach ($feeTypes as $fee) {
-        //             PaymentDetail::factory()->create([
-        //                 'payment_id' => $payment->id,
-        //                 'fee_type_id' => $fee->id,
-        //                 'amount' => $fee->amount,
-        //             ]);
-        //         }
         //     }
         // }
 
+        // // 5. Create Payments with historical fee amounts
+        // foreach ($residents as $resident) {
+        //     $houseResidents = HouseResident::where('resident_id', $resident->id)->get();
+            
+        //     foreach ($houseResidents as $houseResident) {
+        //         // Create payments for each month of occupancy
+        //         $entryDate = Carbon::parse($houseResident->date_of_entry);
+        //         $exitDate = $houseResident->date_of_exit ? Carbon::parse($houseResident->date_of_exit) : now();
+        //         $months = $entryDate->diffInMonths($exitDate);
+
+        //         // Limit to max 12 months for seeding
+        //         $monthsToSeed = min($months, 12);
+                
+        //         for ($i = 0; $i < $monthsToSeed; $i++) {
+        //             $paymentDate = $exitDate->copy()->subMonths($monthsToSeed - $i - 1);
+                    
+        //             // Determine which fee version to use based on payment date
+        //             $payment = Payment::factory()->create([
+        //                 'resident_id' => $resident->id,
+        //                 'house_id' => $houseResident->house_id,
+        //                 'payment_date' => $paymentDate,
+        //                 'month' => $paymentDate->month,
+        //                 'year' => $paymentDate->year,
+        //                 'status' => rand(0, 1) ? 'lunas' : 'belum_lunas',
+        //             ]);
+
+        //             foreach ($feeTypes as $feeType) {
+        //                 $applicableFee = FeeType::where('name', $feeType->name)
+        //                     ->where('effective_date', '<=', $paymentDate)
+        //                     ->orderBy('effective_date', 'desc')
+        //                     ->first();
+
+        //                 if ($applicableFee) {
+        //                     PaymentDetail::factory()->create([
+        //                         'payment_id' => $payment->id,
+        //                         'fee_type_id' => $applicableFee->id,
+        //                         'amount' => $applicableFee->amount,
+        //                         'original_amount' => $applicableFee->amount,
+        //                         'fee_name' => $applicableFee->name,
+        //                     ]);
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
     }
 }

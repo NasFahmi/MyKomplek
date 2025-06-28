@@ -18,6 +18,7 @@ class Payment extends Model
     public $incrementing = false;
 
     protected $fillable = [
+        'code',
         'resident_id',
         'home_id',
         'payment_date',

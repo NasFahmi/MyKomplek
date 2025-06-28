@@ -22,6 +22,8 @@ class PaymentDetail extends Model
         'fee_type_id',
         'payment_id',
         'amount',
+        'fee_name',
+        'original_amount',
     ];
 
 

@@ -11,7 +11,7 @@ class StoreFeeTypeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return auth()->check();
     }
 
     /**
@@ -22,7 +22,20 @@ class StoreFeeTypeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required|string|max:255',
+            'amount' => 'required|numeric',
+            'description' => 'nullable|string',
+            'is_active' => 'required|boolean',
+            'effective_date' => 'required|date|after_or_equal:today'
+        ];
+    }
+    public function messages(){
+        return[
+            'name.required' => 'Nama wajib diisi.',
+            'amount.required' => 'Jumlah wajib diisi.',
+            'is_active.required' => 'Status wajib diisi.',
+            'effective_date.required' => 'Tanggal mulai berlaku wajib diisi.',
+            'effective_date.after_or_equal' => 'Tanggal mulai berlaku harus setelah tanggal hari ini.',
         ];
     }
 }

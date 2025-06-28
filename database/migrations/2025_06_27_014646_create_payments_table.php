@@ -13,14 +13,13 @@ return new class extends Migration {
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('resident_id')->references('id')->on('residents')->onDelete('cascade')->onUpdate('cascade'); //relasi resident
-            $table->foreignUuid('house_id')->references('id')->on('houses')->onDelete('cascade')->onUpdate('cascade'); //relasi house
+            $table->string('code');
+            $table->foreignUuid('resident_id')->constrained('residents')->onDelete('cascade');
+            $table->foreignUuid('house_id')->constrained('houses')->onDelete('cascade');
             $table->date('payment_date');
-            $table->integer('month'); //bulan
-            $table->integer('year'); //tahun
-
+            $table->integer('month');
+            $table->integer('year');
             $table->enum('status', array_map(fn($case) => $case->value, PaymentStatus::cases()))->default(PaymentStatus::BelumLunas);
-
             $table->text('description');
             $table->timestamps();
         });

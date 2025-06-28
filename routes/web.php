@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\FeeTypeController;
 use App\Http\Controllers\HouseController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ResidentController;
@@ -58,10 +59,22 @@ Route::middleware('auth')->group(function () {
 
     // Pembayaran
     Route::get('/pembayaran', [PaymentController::class, 'index'])->name('pembayaran.index');
+    Route::get('/pembayaran/create', [PaymentController::class, 'create'])->name('pembayaran.create');
+    Route::post('/pembayaran', [PaymentController::class, 'store'])->name('pembayaran.store');
+    Route::get('/pembayaran/{payment}', [PaymentController::class, 'show'])->name('pembayaran.show');
+    Route::get('/pembayaran/{payment}/edit', [PaymentController::class, 'edit'])->name('pembayaran.edit');
+    Route::put('/pembayaran/{payment}', [PaymentController::class, 'update'])->name('pembayaran.update');
+    Route::delete('/pembayaran/{payment}', [PaymentController::class, 'destroy'])->name('pembayaran.destroy');
 
     // Pengeluaran
     Route::get('/pengeluaran', [ExpenseController::class, 'index'])->name('pengeluaran.index');
 
+    Route::get('/pembayaran/iuran/create', [FeeTypeController::class, 'create'])->name('pembayaran.fee-type.create');
+    Route::post('/pembayaran/iuran/create', [FeeTypeController::class, 'store'])->name('pembayaran.fee-type.store');
+    Route::get('/pembayaran/iuran/{feeType}', [FeeTypeController::class, 'show'])->name('pembayaran.fee-type.show');
+    Route::get('/pembayaran/iuran/{feeType}/edit', [FeeTypeController::class, 'edit'])->name('pembayaran.fee-type.edit');
+    Route::put('/pembayaran/iuran/{feeType}', [FeeTypeController::class, 'update'])->name('pembayaran.fee-type.update');
+    Route::delete('/pembayaran/iuran/{feeType}', [FeeTypeController::class, 'destroy'])->name('pembayaran.fee-type.destroy');
 
     Route::get('/reset-password', [AuthController::class, 'showResetForm'])->name('reset-password.index');
     Route::put('/reset-password', [AuthController::class, 'resetPassword'])->name('reset-password.put');

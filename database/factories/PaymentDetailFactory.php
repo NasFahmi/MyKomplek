@@ -19,13 +19,15 @@ class PaymentDetailFactory extends Factory
      */
     public function definition(): array
     {
+        $feeType = FeeType::inRandomOrder()->first() ?? FeeType::factory();
+
         return [
             'id' => Str::uuid(),
-            'payment_id' => Payment::inRandomOrder()->first()->id,
-            'fee_type_id' => FeeType::inRandomOrder()->first()->id,
-            'amount' => function (array $attr) {
-                return FeeType::find($attr['fee_type_id'])->amount;
-            }
+            'payment_id' => Payment::inRandomOrder()->first()?->id ?? Payment::factory(),
+            'fee_type_id' => $feeType->id,
+            'amount' => $feeType->amount,
+            'original_amount' => $feeType->amount, // Simpan nilai asli
+            'fee_name' => $feeType->name, // Backup nama
         ];
     }
 }

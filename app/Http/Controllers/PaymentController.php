@@ -5,15 +5,31 @@ namespace App\Http\Controllers;
 use App\Models\Payment;
 use App\Http\Requests\StorePaymentRequest;
 use App\Http\Requests\UpdatePaymentRequest;
+use App\Services\FeeTypeService;
+use App\Services\HouseService;
+use App\Services\PaymentService;
 
 class PaymentController extends Controller
 {
+    protected PaymentService $paymentService;
+    protected HouseService $houseService;
+    protected FeeTypeService $feeTypeService;
+
+    public function __construct(PaymentService $paymentService, HouseService $houseService, FeeTypeService $feeTypeService)
+    {
+        $this->paymentService = $paymentService;
+        $this->houseService = $houseService;
+        $this->feeTypeService = $feeTypeService;
+        
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('pages.dashboard.pembayaran.index');
+        $fee = $this->paymentService->getAllFeeType();
+        // dd($fee);
+        return view('pages.dashboard.pembayaran.index', compact('fee'));
     }
 
     /**
@@ -21,7 +37,10 @@ class PaymentController extends Controller
      */
     public function create()
     {
-        //
+        $feeTypes = $this->feeTypeService->getAllFeeType();
+        $houses = $this->paymentService->getActiveHouseResident();
+        // dd($houses);
+        return view('pages.dashboard.pembayaran.create', compact('houses','feeTypes'));
     }
 
     /**
@@ -29,7 +48,7 @@ class PaymentController extends Controller
      */
     public function store(StorePaymentRequest $request)
     {
-        //
+        dd($request);
     }
 
     /**
@@ -37,7 +56,8 @@ class PaymentController extends Controller
      */
     public function show(Payment $payment)
     {
-        //
+        $payment = $this->paymentService->getPaymentById($payment->id);
+        return view('pages.dashboard.pembayaran.show', compact('payment'));
     }
 
     /**
@@ -45,7 +65,8 @@ class PaymentController extends Controller
      */
     public function edit(Payment $payment)
     {
-        //
+        $payment = $this->paymentService->getPaymentById($payment->id);
+        return view('pages.dashboard.pembayaran.show', compact('payment'));
     }
 
     /**

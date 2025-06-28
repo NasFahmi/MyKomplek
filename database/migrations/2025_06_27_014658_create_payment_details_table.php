@@ -12,9 +12,11 @@ return new class extends Migration {
     {
         Schema::create('payment_details', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('fee_type_id')->references('id')->on('fee_types')->onDelete('cascade')->onUpdate('cascade'); //relasi ke fee_type
-            $table->foreignUuid('payment_id')->references('id')->on('payments')->onDelete('cascade')->onUpdate('cascade'); //relasi ke payment
-            $table->decimal('amount', 8, 2); //harga dari fee 
+            $table->foreignUuid('fee_type_id')->constrained('fee_types')->onDelete('restrict'); // Ubah cascade ke restrict
+            $table->foreignUuid('payment_id')->constrained('payments')->onDelete('cascade');
+            $table->decimal('amount', 10, 2);
+            $table->string('fee_name'); // Backup nama fee
+            $table->decimal('original_amount', 10, 2); // Harga asli saat transaksi
             $table->timestamps();
         });
     }

@@ -20,14 +20,17 @@ class PaymentFactory extends Factory
      */
     public function definition(): array
     {
+        $year = $this->faker->numberBetween(2023, 2025);
+        $month = $this->faker->numberBetween(1, 12);
+
         return [
             'id' => Str::uuid(),
-            'resident_id' => Resident::inRandomOrder()->first()->id,
-            'house_id' => House::inRandomOrder()->first()->id,
-            'payment_date' => $this->faker->date(),
-            'month' => $this->faker->numberBetween(1, 12),
-            'year' => 2025,
-            'status' => PaymentStatus::Lunas->value,
+            'resident_id' => Resident::inRandomOrder()->first()?->id ?? Resident::factory(),
+            'house_id' => House::inRandomOrder()->first()?->id ?? House::factory(),
+            'payment_date' => now()->setYear($year)->setMonth($month),
+            'month' => $month,
+            'year' => $year,
+            'status' => $this->faker->randomElement(PaymentStatus::cases())->value,
             'description' => $this->faker->sentence(),
         ];
     }

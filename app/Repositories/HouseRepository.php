@@ -56,7 +56,7 @@ class HouseRepository implements HouseInterface
     {
         // make new resident
         $resident = Resident::create($data);
-        
+
         HouseResident::create([
             'house_id' => $house->id,
             'resident_id' => $resident->id,
@@ -66,5 +66,10 @@ class HouseRepository implements HouseInterface
         House::find($house->id)->update(['status' => 1]);
         // dd($houseResident);
         return $resident;
+    }
+    public function houseActiveResident(): Collection
+    {
+        $houses = House::with(['currentResident.resident'])->where('status', 1)->get();
+        return $houses;
     }
 }
