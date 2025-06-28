@@ -25,6 +25,7 @@ class PaymentFactory extends Factory
 
         return [
             'id' => Str::uuid(),
+            'code'=> Str::random(5),
             'resident_id' => Resident::inRandomOrder()->first()?->id ?? Resident::factory(),
             'house_id' => House::inRandomOrder()->first()?->id ?? House::factory(),
             'payment_date' => now()->setYear($year)->setMonth($month),

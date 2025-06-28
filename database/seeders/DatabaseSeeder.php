@@ -10,11 +10,17 @@ use App\Models\Payment;
 use App\Models\PaymentDetail;
 use App\Models\Resident;
 use App\Models\User;
+use Database\Factories\HouseActiveFactory;
+use Database\Factories\HouseNonActiveFactory;
+use Database\Factories\ResidentActiveFactory;
+use Database\Factories\ResidentNonActiveFactory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
+
     public function run(): void
     {
         // 1. Create Admin User
@@ -28,84 +34,118 @@ class DatabaseSeeder extends Seeder
         // 2. Seed Fee Types (with historical versions)
         $this->call(FeeTypeSeeder::class);
         $feeTypes = FeeType::all();
-        $expense = Expense::factory()->count(10)->create();
-        
 
-        // 3. Create Houses and Residents
-        // $houses = House::factory()->count(10)->create();
-        // $residents = Resident::factory()->count(20)->create(); // Increased to 20 to ensure enough residents
+        // 3. Seed Expenses
+        Expense::factory()->count(5)->create();
 
-        // // 4. Assign Residents to Houses (with some houses having multiple residents over time)
-        // foreach ($houses as $index => $house) {
-        //     // Current resident - use modulo to ensure we don't exceed array bounds
-        //     $currentResident = $residents[$index % count($residents)];
-            
-        //     HouseResident::factory()->create([
-        //         'house_id' => $house->id,
-        //         'resident_id' => $currentResident->id,
-        //         'date_of_entry' => now()->subMonths(rand(3, 12)),
-        //         'date_of_exit' => null,
-        //     ]);
+        // 4. Seed Houses - aktif dan non aktif
+        $houseActive = House::factory()->activeHouse()->count(5)->create();
+        $houseNonActive = House::factory()->nonActiveHouse()->count(5)->create();
 
-        //     // For some houses, add previous residents
-        //     if ($index % 3 === 0) {
-        //         // Use different resident - ensure index is valid
-        //         $prevResidentIndex = ($index + 10) % count($residents);
-        //         $prevResident = $residents[$prevResidentIndex];
+        // 5. Seed Residents - aktif dan non aktif
+        $residentActive = Resident::factory()->activeResident()->count(10)->create();
+        $residentNonActive = Resident::factory()->nonActiveResident()->count(10)->create();
 
-        //         HouseResident::factory()->create([
-        //             'house_id' => $house->id,
-        //             'resident_id' => $prevResident->id,
-        //             'date_of_entry' => now()->subMonths(rand(15, 24)),
-        //             'date_of_exit' => now()->subMonths(rand(5, 10)),
-        //         ]);
-        //     }
-        // }
+        // 6. Assign Active Residents to Active Houses
+        foreach ($houseActive as $index => $house) {
+            // Ambil resident aktif yang belum memiliki rumah
+            $resident = $residentActive->filter(function ($r) {
+                return !$r->houseResidents()->exists();
+            })->first();
 
-        // // 5. Create Payments with historical fee amounts
-        // foreach ($residents as $resident) {
-        //     $houseResidents = HouseResident::where('resident_id', $resident->id)->get();
-            
-        //     foreach ($houseResidents as $houseResident) {
-        //         // Create payments for each month of occupancy
-        //         $entryDate = Carbon::parse($houseResident->date_of_entry);
-        //         $exitDate = $houseResident->date_of_exit ? Carbon::parse($houseResident->date_of_exit) : now();
-        //         $months = $entryDate->diffInMonths($exitDate);
+            if (!$resident) {
+                break;
+            }
 
-        //         // Limit to max 12 months for seeding
-        //         $monthsToSeed = min($months, 12);
-                
-        //         for ($i = 0; $i < $monthsToSeed; $i++) {
-        //             $paymentDate = $exitDate->copy()->subMonths($monthsToSeed - $i - 1);
-                    
-        //             // Determine which fee version to use based on payment date
-        //             $payment = Payment::factory()->create([
-        //                 'resident_id' => $resident->id,
-        //                 'house_id' => $houseResident->house_id,
-        //                 'payment_date' => $paymentDate,
-        //                 'month' => $paymentDate->month,
-        //                 'year' => $paymentDate->year,
-        //                 'status' => rand(0, 1) ? 'lunas' : 'belum_lunas',
-        //             ]);
+            $houseResident = HouseResident::create([
+                'house_id' => $house->id,
+                'resident_id' => $resident->id,
+                'date_of_entry' => Carbon::now()->subMonths(rand(3, 12)),
+                'date_of_exit' => null, // masih aktif
+            ]);
 
-        //             foreach ($feeTypes as $feeType) {
-        //                 $applicableFee = FeeType::where('name', $feeType->name)
-        //                     ->where('effective_date', '<=', $paymentDate)
-        //                     ->orderBy('effective_date', 'desc')
-        //                     ->first();
+            // Update status resident sesuai dengan house
+            $resident->update(['resident_status' => $house->status]);
 
-        //                 if ($applicableFee) {
-        //                     PaymentDetail::factory()->create([
-        //                         'payment_id' => $payment->id,
-        //                         'fee_type_id' => $applicableFee->id,
-        //                         'amount' => $applicableFee->amount,
-        //                         'original_amount' => $applicableFee->amount,
-        //                         'fee_name' => $applicableFee->name,
-        //                     ]);
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+            // 7. Create Payment + 2 bulan PaymentDetail per fee type
+            $payment = Payment::create([
+                'code' => Str::random(5),
+                'house_id' => $house->id,
+                'resident_id' => $resident->id,
+                'payment_date' => now()->subDays(rand(1, 30)),
+                'status' => 'lunas',
+            ]);
+
+            foreach ($feeTypes as $feeType) {
+                for ($i = 0; $i < 2; $i++) {
+                    PaymentDetail::create([
+                        'payment_id' => $payment->id,
+                        'fee_type_id' => $feeType->id,
+                        'month' => now()->subMonths($i)->month,
+                        'year' => now()->subMonths($i)->year,
+                        'amount' => $feeType->amount,
+                    ]);
+                }
+            }
+        }
+
+        // 8. Assign NonActive Residents to NonActive Houses
+        foreach ($houseNonActive as $index => $house) {
+            // Ambil resident non-aktif yang belum memiliki rumah
+            $resident = $residentNonActive->filter(function ($r) {
+                return !$r->houseResidents()->exists();
+            })->first();
+
+            if (!$resident) {
+                break;
+            }
+
+            $houseResident = HouseResident::create([
+                'house_id' => $house->id,
+                'resident_id' => $resident->id,
+                'date_of_entry' => Carbon::now()->subMonths(rand(6, 12)),
+                'date_of_exit' => Carbon::now(), // sudah tidak tinggal
+            ]);
+
+            // Update status resident sesuai dengan house
+            $resident->update(['resident_status' => $house->status]);
+        }
+
+        // 9. Handle remaining residents (jika ada)
+        $remainingActiveResidents = $residentActive->filter(function ($r) {
+            return !$r->houseResidents()->exists();
+        });
+
+        $remainingNonActiveResidents = $residentNonActive->filter(function ($r) {
+            return !$r->houseResidents()->exists();
+        });
+
+        // Assign remaining active residents to random active houses
+        foreach ($remainingActiveResidents as $resident) {
+            $house = $houseActive->random();
+
+            HouseResident::create([
+                'house_id' => $house->id,
+                'resident_id' => $resident->id,
+                'date_of_entry' => Carbon::now()->subMonths(rand(3, 12)),
+                'date_of_exit' => null,
+            ]);
+
+            $resident->update(['resident_status' => $house->status]);
+        }
+
+        // Assign remaining non-active residents to random non-active houses
+        foreach ($remainingNonActiveResidents as $resident) {
+            $house = $houseNonActive->random();
+
+            HouseResident::create([
+                'house_id' => $house->id,
+                'resident_id' => $resident->id,
+                'date_of_entry' => Carbon::now()->subMonths(rand(6, 12)),
+                'date_of_exit' => Carbon::now(),
+            ]);
+
+            $resident->update(['resident_status' => $house->status]);
+        }
     }
 }

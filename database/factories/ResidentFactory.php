@@ -25,6 +25,17 @@ class ResidentFactory extends Factory
             'status' => $this->faker->randomElement(ResidentStatus::cases())->value,
             'phone_number' => $this->faker->phoneNumber(),
             'married_status' => $this->faker->boolean(),
+            'resident_status' => $this->faker->boolean(),
         ];
+    }
+    public function activeResident(){
+        return $this->state([
+            'resident_status' => true,
+        ]);
+    }
+    public function nonActiveResident(){
+        return $this->state([
+            'resident_status' => false,
+        ]);
     }
 }

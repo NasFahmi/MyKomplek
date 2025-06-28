@@ -24,4 +24,14 @@ class HouseFactory extends Factory
             'status' => $this->faker->boolean(),
         ];
     }
+    public function activeHouse(){
+        return $this->state([
+            'status' => true,
+        ]);
+    }
+    public function nonActiveHouse(){
+        return $this->state([
+            'status' => false,
+        ]);
+    }
 }
