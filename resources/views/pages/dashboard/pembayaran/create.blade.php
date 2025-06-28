@@ -178,7 +178,7 @@
             </div>
 
             {{-- deskripsi --}}
-            <div class="mt-4">
+            <div x-show="Object.keys(selectedFees).length > 0" x-transition class="mt-4">
                 <label for="description" class="block mb-2 text-sm font-medium text-gray-900">
                     Deskripsi
                 </label>
