@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->string('expense_type'); //tipe pengeluaran, Mendeskripsikan apa yang dibeli security_salary, road_repair, electricity
             $table->decimal('amount', 8, 2);
             $table->date('date');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->string('category'); //routine, emergency, administrative
             $table->string('payment_method');
             $table->timestamps();

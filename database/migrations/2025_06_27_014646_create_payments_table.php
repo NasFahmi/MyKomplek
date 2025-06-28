@@ -16,11 +16,9 @@ return new class extends Migration {
             $table->string('code');
             $table->foreignUuid('resident_id')->constrained('residents')->onDelete('cascade');
             $table->foreignUuid('house_id')->constrained('houses')->onDelete('cascade');
-            $table->date('payment_date');
-            $table->integer('month');
-            $table->integer('year');
+            $table->date('payment_date')->default(now());
             $table->enum('status', array_map(fn($case) => $case->value, PaymentStatus::cases()))->default(PaymentStatus::BelumLunas);
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }

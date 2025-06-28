@@ -54,8 +54,15 @@ class FeeTypeController extends Controller
      */
     public function show(FeeType $feeType)
     {
+        // Ambil ulang FeeType lengkap dengan data relasi jika perlu
         $feeType = $this->feeTypeService->getFeeType($feeType->id);
-        return view('pages.dashboard.iuran.show', compact('feeType'));
+
+        // Ambil relasi PaymentDetails dengan Pagination
+        $paymentDetails = $feeType->paymentDetails()
+            ->with('payment.resident')
+            ->latest()
+            ->paginate(10);
+        return view('pages.dashboard.iuran.show', compact('feeType','paymentDetails'));
     }
 
     /**
@@ -75,7 +82,7 @@ class FeeTypeController extends Controller
         $data = $request->validated();
         try {
             $this->feeTypeService->updateFeeType($data, $feeType->id);
-            return redirect()->route('pembayaran.index' )->with('success', 'Iuran berhasil ditambahkan.');
+            return redirect()->route('pembayaran.index')->with('success', 'Iuran berhasil ditambahkan.');
         } catch (\Throwable $th) {
             //throw $th;
             Log::error('update error', ['error' => $th->getMessage()]);

@@ -11,4 +11,6 @@ use App\Interface\Base\UpdateInterface;
 
 interface PaymentInterface extends CreateInterface, FindInterface, GetAllInterface, UpdateInterface, DeleteInterface, GetInterface
 {
+    public function paymentByFeeType(string $id): array;
+    public function updateStatus($id);
 }

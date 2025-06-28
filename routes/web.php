@@ -63,11 +63,18 @@ Route::middleware('auth')->group(function () {
     Route::post('/pembayaran', [PaymentController::class, 'store'])->name('pembayaran.store');
     Route::get('/pembayaran/{payment}', [PaymentController::class, 'show'])->name('pembayaran.show');
     Route::get('/pembayaran/{payment}/edit', [PaymentController::class, 'edit'])->name('pembayaran.edit');
-    Route::put('/pembayaran/{payment}', [PaymentController::class, 'update'])->name('pembayaran.update');
+    Route::patch('/pembayaran/{payment}', [PaymentController::class, 'update'])->name('pembayaran.update');
     Route::delete('/pembayaran/{payment}', [PaymentController::class, 'destroy'])->name('pembayaran.destroy');
 
     // Pengeluaran
     Route::get('/pengeluaran', [ExpenseController::class, 'index'])->name('pengeluaran.index');
+    Route::get('/pengeluaran/create', [ExpenseController::class, 'create'])->name('pengeluaran.create');
+    Route::get('/pengeluaran/report', [ExpenseController::class, 'report'])->name('pengeluaran.report.show');
+    Route::post('/pengeluaran', [ExpenseController::class, 'store'])->name('pengeluaran.store');
+    Route::get('/pengeluaran/{expense}', [ExpenseController::class, 'show'])->name('pengeluaran.show');
+    Route::get('/pengeluaran/{expense}/edit', [ExpenseController::class, 'edit'])->name('pengeluaran.edit');
+    Route::patch('/pengeluaran/{expense}', [ExpenseController::class, 'update'])->name('pengeluaran.update');
+    Route::delete('/pengeluaran/{expense}', [ExpenseController::class, 'destroy'])->name('pengeluaran.destroy');
 
     Route::get('/pembayaran/iuran/create', [FeeTypeController::class, 'create'])->name('pembayaran.fee-type.create');
     Route::post('/pembayaran/iuran/create', [FeeTypeController::class, 'store'])->name('pembayaran.fee-type.store');

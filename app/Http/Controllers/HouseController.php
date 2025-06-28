@@ -6,6 +6,7 @@ use App\Http\Requests\StoreResidentHouseRequest;
 use App\Models\House;
 use App\Http\Requests\StoreHouseRequest;
 use App\Http\Requests\UpdateHouseRequest;
+use App\Services\FeeTypeService;
 use App\Services\HouseService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Contracts\View\View;
@@ -13,10 +14,12 @@ use Illuminate\Contracts\View\View;
 class HouseController extends Controller
 {
     protected HouseService $houseService;
+    protected FeeTypeService $feeTypeService;
 
-    public function __construct(HouseService $houseService)
+    public function __construct(HouseService $houseService, FeeTypeService $feeTypeService)
     {
         $this->houseService = $houseService;
+        $this->feeTypeService = $feeTypeService;
     }
     /**
      * Display a listing of the resource.
@@ -61,8 +64,10 @@ class HouseController extends Controller
     {
         $house = $this->houseService->getHouse($house);
         $history = $this->houseService->getHouse($house);
+
+        $paymentDetails = $house->payment()->paginate(10);
         // dd($house->houseResidents->whereNull('date_of_exit'));
-        return view('pages.dashboard.rumah.show', compact('house', 'history'));
+        return view('pages.dashboard.rumah.show', compact('house', 'history','paymentDetails'));
     }
 
     /**

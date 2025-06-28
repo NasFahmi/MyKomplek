@@ -267,6 +267,69 @@
             @endforelse
         </div>
 
+        {{-- history pembayaran --}}
+        {{-- Kolom Kanan: Riwayat Pembayaran --}}
+        <div class="mt-6">
+            <h2 class="mb-4 text-lg font-semibold text-gray-900">Riwayat Pembayaran</h2>
+            <div class="relative overflow-x-auto border rounded-lg shadow-sm">
+                <table class="w-full text-sm text-left text-gray-500">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">Nama Pembayar</th>
+                            <th scope="col" class="px-6 py-3">Tanggal Bayar</th>
+                            <th scope="col" class="px-6 py-3 text-right">Jumlah</th>
+                            <th scope="col" class="px-6 py-3">Status</th>
+                            <th scope="col" class="px-6 py-3 text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{-- FIX: Menggunakan @forelse dan looping pada relasi yang benar --}}
+                        @forelse ($paymentDetails as $detail)
+                            <tr class="bg-white border-b hover:bg-gray-50">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                    {{-- Asumsi relasi: PaymentDetail -> Payment -> Resident --}}
+                                    {{ $detail->resident->name ?? 'N/A' }}
+                                </th>
+                                <td class="px-6 py-4">
+                                    {{ \Carbon\Carbon::parse($detail->payment_date)->isoFormat('D MMMM YYYY') }}
+                                </td>
+                                <td class="px-6 py-4 font-medium text-right text-gray-800">
+                                    {{-- FIX: Menghapus kurung kurawal ganda --}}
+                                    Rp {{ number_format($detail->amount, 0, ',', '.') }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="px-3 py-1 text-xs font-medium text-green-800 bg-green-100 rounded-full">
+                                        {{ $detail->status ? 'Lunas' : 'Belum Lunas' }}
+                                        {{-- {{ ucfirst($detail->payment->status) }} --}}
+                                    </span>
+                                </td>
+                                <td class="flex items-center justify-center px-6 py-4 font-medium text-right text-gray-800">
+                                    {{-- FIX: Menghapus kurung kurawal ganda --}}
+                                    <a href="{{route('pembayaran.show', $detail->id)}}">
+                                        Detail
+
+                                    </a>
+                                </td>
+                            </tr>
+                        @empty
+                            {{-- FIX: Menampilkan pesan jika tidak ada data --}}
+                            <tr>
+                                <td colspan="4" class="py-6 text-center text-gray-500">
+                                    Belum ada riwayat pembayaran untuk iuran ini.
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+                <div class="p-4">
+                    {{ $paymentDetails->links() }}
+                    {{-- {{ $paymentDetails->onEachSide(1)->links('vendor.pagination.tailwind') }} --}}
+
+                </div>
+
+            </div>
+        </div>
+
         <div x-show="deleteModalOpen" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0"
             x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200"
             x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"

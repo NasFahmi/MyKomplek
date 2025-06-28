@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Interface\FeeTypeInterface;
 use App\Interface\HouseInterface;
 use App\Interface\PaymentInterface;
+use App\Models\House;
 use Illuminate\Database\Eloquent\Collection;
 
 class PaymentService
@@ -27,8 +28,31 @@ class PaymentService
     {
         return $this->paymentRepository->get($id);
     }
-    public function getActiveHouseResident() : Collection {
+    public function getActiveHouseResident(): Collection
+    {
         return $this->houseRepository->houseActiveResident();
     }
+    public function createPayment(array $data)
+    {
+        return $this->paymentRepository->create($data);
+    }
+    public function getAllPayment(): Collection
+    {
+        return $this->paymentRepository->getAll();
+    }
+    public function getPaymentByFeeType($id)
+    {
+        return $this->paymentRepository->paymentByFeeType($id);
+    }
+    public function updatePayment($id)
+    {
+        return $this->paymentRepository->updateStatus($id);
+    }
+
+    public function getPaymentsForHouse(House $house, int $perPage = 10)
+    {
+        return $house->payment()->paginate($perPage); // Pastikan menggunakan () untuk memanggil query builder
+    }
+
 
 }

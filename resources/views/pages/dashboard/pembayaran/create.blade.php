@@ -93,39 +93,9 @@
                         <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
-                <div class="flex flex-col gap-2">
-                    <label class="block text-sm font-semibold text-gray-600">Periode Pembayaran</label>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="flex gap-2">
-                            <select x-model="startMonth" class="w-1/2 px-2 py-2 border rounded">
-                                @foreach (range(1, 12) as $month)
-                                    <option value="{{ $month }}">
-                                        {{ \Carbon\Carbon::create()->month($month)->translatedFormat('F') }}</option>
-                                @endforeach
-                            </select>
-                            <input x-model.number="startYear" type="number" min="2020"
-                                class="w-1/2 px-2 py-2 border rounded" placeholder="Tahun awal">
-                        </div>
-                        <div class="flex gap-2">
-                            <select x-model="endMonth" class="w-1/2 px-2 py-2 border rounded">
-                                @foreach (range(1, 12) as $month)
-                                    <option value="{{ $month }}">
-                                        {{ \Carbon\Carbon::create()->month($month)->translatedFormat('F') }}</option>
-                                @endforeach
-                            </select>
-                            <input x-model.number="endYear" type="number" min="2020"
-                                class="w-1/2 px-2 py-2 border rounded" placeholder="Tahun akhir">
-                        </div>
-                    </div>
-                    <input type="hidden" name="start_month" :value="startMonth">
-                    <input type="hidden" name="start_year" :value="startYear">
-                    <input type="hidden" name="end_month" :value="endMonth">
-                    <input type="hidden" name="end_year" :value="endYear">
+                <div class="">
 
-                    <input type="hidden" name="total_months" :value="getTotalMonths()">
-
-
-                    <label class="block mt-4 text-sm font-semibold text-gray-600">Status Pembayaran</label>
+                    <label class="block mb-2 text-sm font-semibold text-gray-600">Status Pembayaran</label>
                     <select id="status" name="status"
                         class="w-full px-3 py-2 text-sm border-gray-200 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500"
                         required>
@@ -136,18 +106,25 @@
 
             </div>
 
-            {{-- Bagian 3: Pilih Iuran & Durasi (Muncul setelah penghuni dipilih) --}}
+            {{-- Pilih Iuran --}}
             <div x-show="selectedHouseId" x-transition class="mb-8">
                 <label class="block mb-4 text-lg font-semibold text-gray-700">3. Pilih Iuran yang Dibayar</label>
                 <div class="space-y-3">
                     <template x-for="fee in feeTypes" :key="fee.id">
-                        <div class="flex items-center gap-4 p-4 border rounded-lg"
+                        <div class="flex flex-col gap-2 p-4 border rounded-lg"
                             :class="{ 'bg-blue-50/50 border-blue-200': isFeeSelected(fee.id) }">
-                            <input :id="'fee-' + fee.id" type="checkbox" @click="toggleFee(fee.id, fee.amount)"
-                                class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                            <label :for="'fee-' + fee.id" class="flex-grow text-sm font-medium text-gray-700"
-                                x-text="fee.name"></label>
-                            <div x-show="isFeeSelected(fee.id)" x-transition class="grid grid-cols-2 gap-2">
+                            <div class="flex items-center gap-4">
+                                <input :id="'fee-' + fee.id" type="checkbox" @click="toggleFee(fee.id, fee.amount)"
+                                    class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                <label :for="'fee-' + fee.id" class="flex-grow text-sm font-medium text-gray-700"
+                                    x-text="fee.name"></label>
+                                <div class="w-32 text-right">
+                                    <span class="font-semibold text-gray-800" x-text="formatCurrency(fee.amount)"></span>
+                                </div>
+                            </div>
+
+                            <div x-show="isFeeSelected(fee.id)" x-transition
+                                class="grid grid-cols-1 gap-2 mt-2 md:grid-cols-2">
                                 <div class="flex items-center gap-2">
                                     <label class="text-sm text-gray-500">Mulai:</label>
                                     <select x-model.number="selectedFees[fee.id].start_month"
@@ -171,17 +148,12 @@
                                         class="w-20 px-2 py-1 text-sm border rounded">
                                 </div>
                             </div>
-
-                            <div class="w-32 text-right">
-                                <span class="font-semibold text-gray-800"
-                                    x-text="'Rp ' + formatCurrency(fee.amount)"></span>
-                            </div>
                         </div>
                     </template>
                 </div>
             </div>
 
-            {{-- Bagian 4: Ringkasan Pembayaran (Muncul setelah iuran dipilih) --}}
+            {{-- Ringkasan Pembayaran --}}
             <div x-show="Object.keys(selectedFees).length > 0" x-transition class="mb-8">
                 <label class="block mb-4 text-lg font-semibold text-gray-700">4. Ringkasan Pembayaran</label>
                 <div class="p-6 border rounded-lg bg-gray-50">
@@ -190,38 +162,50 @@
                             <li class="flex justify-between text-sm">
                                 <div>
                                     <span x-text="getFeeName(feeId)"></span>
-                                    <span class="text-gray-500" x-text="' x ' + getTotalMonths() + ' bulan'"></span>
+                                    <span class="text-gray-500">
+                                        x <span x-text="getFeeDuration(feeId)"></span> bulan
+                                    </span>
                                 </div>
-                                <span class="font-medium" x-text="'Rp ' + formatCurrency(getFeeSubtotal(feeId))"></span>
+                                <span class="font-medium" x-text="formatCurrency(getFeeSubtotal(feeId))"></span>
                             </li>
-
                         </template>
                     </ul>
                     <div class="flex items-center justify-between pt-4 mt-4 border-t-2 border-dashed">
-                        <div class="">
-                            <p class="text-lg font-bold text-gray-800">Total</p>
-                            <p class="mt-2 text-sm text-gray-600" x-show="getTotalMonths() > 0">
-                                Durasi: <strong x-text="getTotalMonths()"></strong> bulan
-                            </p>
-
-                            <p class="mt-2 text-sm text-gray-600" x-show="getTotalYears() > 0">
-                                Durasi: <strong x-text="getTotalYears()"></strong> tahun
-                            </p>
-                        </div>
-                        <p class="text-2xl font-bold text-blue-600" x-text="'Rp ' + formatCurrency(totalPayment)"></p>
+                        <p class="text-lg font-bold text-gray-800">Total</p>
+                        <p class="text-2xl font-bold text-blue-600" x-text="formatCurrency(totalPayment)"></p>
                     </div>
                 </div>
             </div>
 
-            {{-- Hidden inputs untuk mengirim data terpilih ke controller --}}
+            {{-- deskripsi --}}
+            <div class="mt-4">
+                <label for="description" class="block mb-2 text-sm font-medium text-gray-900">
+                    Deskripsi
+                </label>
+                <textarea id="description" name="description" placeholder="Masukkan deskripsi" rows="4"
+                    class="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5
+          @error('description')
+              border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500 focus:border-red-500
+          @else
+              border-gray-300 focus:ring-blue-500 focus:border-blue-500
+          @enderror">{{ old('description') }}</textarea>
+                {{-- Blok untuk menampilkan pesan error --}}
+                @error('description')
+                    <p class="mt-2 text-sm text-red-600"><span class="font-medium">Oops!</span> {{ $message }}</p>
+                @enderror
+            </div>
+
+            {{-- Hidden Inputs --}}
             <template x-for="feeId in Object.keys(selectedFees)" :key="feeId">
                 <div>
-                    <input type="hidden" :name="`fees[${feeId}][duration]`" :value="selectedFees[feeId].duration">
-                    <input type="hidden" :name="`fees[${feeId}][unit]`" :value="selectedFees[feeId].unit">
+                    <input type="hidden" :name="`fees[${feeId}][start_month]`" :value="selectedFees[feeId].start_month">
+                    <input type="hidden" :name="`fees[${feeId}][start_year]`" :value="selectedFees[feeId].start_year">
+                    <input type="hidden" :name="`fees[${feeId}][end_month]`" :value="selectedFees[feeId].end_month">
+                    <input type="hidden" :name="`fees[${feeId}][end_year]`" :value="selectedFees[feeId].end_year">
+                    <input type="hidden" :name="`fees[${feeId}][amount]`" :value="selectedFees[feeId].amount">
+
                 </div>
             </template>
-
-
 
             <div class="flex justify-end mt-8 gap-x-2">
                 <a href="{{ route('pembayaran.index') }}"
@@ -243,107 +227,97 @@
         feeTypes = []
     } = {}) {
         return {
-            // Data dari Controller
-            houses: houses,
-            feeTypes: feeTypes,
-
-            // State
+            houses,
+            feeTypes,
             selectedHouseId: null,
             selectedResidentId: null,
-            selectedFees: {}, // Objek: { fee_id: { duration: 1, unit: 'months', amount: 150000 } }
+            selectedFees: {},
 
-            startMonth: new Date().getMonth() + 1,
-            startYear: new Date().getFullYear(),
-            endMonth: new Date().getMonth() + 1,
-            endYear: new Date().getFullYear(),
-            // Method card rumah
             selectHouse(houseId) {
                 if (this.selectedHouseId === houseId) return;
                 this.selectedHouseId = houseId;
-
-                // Reset pilihan berikutnya
                 this.selectedResidentId = null;
                 this.selectedFees = {};
-                // Optional paksa reset semua checkbox (kalau masih error)
                 this.$nextTick(() => {
                     document.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
                 });
             },
 
-
-            // Method untuk menambah/menghapus iuran
             toggleFee(feeId, feeAmount) {
+                // console.log(feeId);
+                // console.log(this.isFeeSelected(feeId));
+                // console.log(start_month)
+                // console.log(start_year)
+                // console.log(end_month)
+                // console.log(end_year)
+
                 if (this.isFeeSelected(feeId)) {
                     delete this.selectedFees[feeId];
                 } else {
+                    const now = new Date();
                     this.selectedFees[feeId] = {
-                        duration: 1,
-                        unit: 'months',
+                        start_month: now.getMonth() + 1,
+                        start_year: now.getFullYear(),
+                        end_month: now.getMonth() + 1,
+                        end_year: now.getFullYear(),
                         amount: feeAmount
                     };
                 }
             },
 
-            // --- Computed Properties (Getters) ---
-
-            // Cek apakah sebuah iuran sudah dipilih
             isFeeSelected(feeId) {
-                return this.selectedFees.hasOwnProperty(feeId);
+                return !!this.selectedFees[feeId];
             },
 
-            // Mendapatkan daftar penghuni dari rumah yang dipilih
-            get residentsOfSelectedHouse() {
-                if (!this.selectedHouseId) return [];
-                const house = this.houses.find(h => h.id === this.selectedHouseId);
-                // Menangani jika relasi adalah 'house_residents' (array)
-                if (house && Array.isArray(house.house_residents)) {
-                    return house.house_residents.filter(hr => hr.date_of_exit === null);
-                }
-                // Menangani jika relasi adalah 'current_resident' (objek tunggal)
-                if (house && house.current_resident && typeof house.current_resident === 'object') {
-                    if (house.current_resident.date_of_exit === null) {
-                        return [house.current_resident]; // Kembalikan sebagai array dengan satu item
-                    }
-                }
-                return [];
-            },
-
-            // Menghitung subtotal untuk satu iuran
-            getFeeSubtotal(feeId) {
-                const fee = this.selectedFees[feeId];
-                if (!fee) return 0;
-                const months = this.getTotalMonths();
-                return fee.amount * months;
-            },
-
-            getTotalMonths() {
-                const start = new Date(this.startYear, this.startMonth - 1);
-                const end = new Date(this.endYear, this.endMonth - 1);
-                const months = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth()) + 1;
-                return months > 0 ? months : 0;
-            },
-
-
-            // Menghitung total pembayaran dari semua iuran yang dipilih
-            get totalPayment() {
-                return Object.keys(this.selectedFees).reduce((total, feeId) => {
-                    return total + this.getFeeSubtotal(feeId);
-                }, 0);
-            },
-
-            // --- Helper Functions ---
-
-            // Mendapatkan nama iuran berdasarkan ID
             getFeeName(feeId) {
                 const fee = this.feeTypes.find(f => f.id == feeId);
                 return fee ? fee.name : '';
             },
 
-            // Memformat angka menjadi format mata uang Rupiah
-            formatCurrency(amount) {
-                return new Intl.NumberFormat('id-ID').format(amount || 0);
-            }
+            getFeeDuration(feeId) {
+                const fee = this.selectedFees[feeId];
+                const start = new Date(fee.start_year, fee.start_month - 1);
+                const end = new Date(fee.end_year, fee.end_month - 1);
+                // Hitung durasi dalam bulan
+                return (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth()) + 1;
+            },
 
+            getFeeSubtotal(feeId) {
+                const fee = this.selectedFees[feeId];
+                // Pastikan fee.amount ada sebelum menghitung subtotal
+                return this.getFeeDuration(feeId) * (fee.amount || 0);
+            },
+
+            get totalPayment() {
+                return Object.keys(this.selectedFees).reduce((sum, id) => sum + this.getFeeSubtotal(id), 0);
+            },
+
+
+            monthName(m) {
+                return new Date(0, m - 1).toLocaleString('id-ID', {
+                    month: 'long'
+                });
+            },
+
+            get residentsOfSelectedHouse() {
+                if (!this.selectedHouseId) return [];
+                const house = this.houses.find(h => h.id === this.selectedHouseId);
+                if (house?.house_residents?.length) {
+                    return house.house_residents.filter(hr => hr.date_of_exit === null);
+                }
+                if (house?.current_resident?.date_of_exit === null) {
+                    return [house.current_resident];
+                }
+                return [];
+            },
+
+            formatCurrency(amount) {
+                return new Intl.NumberFormat('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR',
+                    minimumFractionDigits: 0,
+                }).format(amount || 0);
+            },
 
         }
     }

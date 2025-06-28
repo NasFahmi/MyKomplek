@@ -2,18 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ExpenseService;
 use App\Models\Expense;
 use App\Http\Requests\StoreExpenseRequest;
 use App\Http\Requests\UpdateExpenseRequest;
+use Illuminate\Support\Facades\Log;
 
 class ExpenseController extends Controller
 {
+
+    protected ExpenseService $expenseService;
+
+    public function __construct(ExpenseService $expenseService)
+    {
+        $this->expenseService = $expenseService;
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('pages.dashboard.pengeluaran.index');
+        $expense = $this->expenseService->getExpense();
+        // dd($expense);
+        return view('pages.dashboard.pengeluaran.index', compact('expense'));
     }
 
     /**
@@ -21,7 +32,7 @@ class ExpenseController extends Controller
      */
     public function create()
     {
-        //
+        return view('pages.dashboard.pengeluaran.create');
     }
 
     /**
@@ -29,7 +40,16 @@ class ExpenseController extends Controller
      */
     public function store(StoreExpenseRequest $request)
     {
-        //
+        $date = $request->validated();
+        try {
+            $this->expenseService->createExpense($date);
+            return redirect()->route('pengeluaran.index')->with('success', 'Pengeluaran berhasil dibuat.');
+        } catch (\Throwable $th) {
+            Log::error('create error', ['error' => $th->getMessage()]);
+            return back()->with('error', 'Terjadi kesalahan saat create pengeluaran.');
+
+        }
+        // $expense = $this->expenseService->createExpense($request);
     }
 
     /**
@@ -37,7 +57,8 @@ class ExpenseController extends Controller
      */
     public function show(Expense $expense)
     {
-        //
+        $expense = $this->expenseService->getExpenseById($expense->id);
+        return view('pages.dashboard.pengeluaran.show', compact('expense'));
     }
 
     /**
@@ -45,7 +66,8 @@ class ExpenseController extends Controller
      */
     public function edit(Expense $expense)
     {
-        //
+        $expense = $this->expenseService->getExpenseById($expense->id);
+        return view('pages.dashboard.pengeluaran.edit', compact('expense'));
     }
 
     /**
@@ -53,7 +75,14 @@ class ExpenseController extends Controller
      */
     public function update(UpdateExpenseRequest $request, Expense $expense)
     {
-        //
+        $data = $request->validated();
+        try {
+            $this->expenseService->updateExpense($data, $expense->id);
+            return redirect()->route('pengeluaran.index')->with('success', 'Pengeluaran berhasil diupdate.');
+        } catch (\Throwable $th) {
+            Log::error('update error', ['error' => $th->getMessage()]);
+            return back()->with('error', 'Terjadi kesalahan saat update pengeluaran.');
+        }
     }
 
     /**
@@ -61,6 +90,16 @@ class ExpenseController extends Controller
      */
     public function destroy(Expense $expense)
     {
-        //
+        try {
+            $this->expenseService->deleteExpense($expense->id);
+            return redirect()->route('pengeluaran.index')->with('success', 'Pengeluaran berhasil dihapus.');
+        } catch (\Throwable $th) {
+            Log::error('delete error', ['error' => $th->getMessage()]);
+            return back()->with('error', 'Terjadi kesalahan saat delete pengeluaran.');
+        }
+    }
+    public function report()
+    {
+        return view('pages.dashboard.pengeluaran.report');
     }
 }

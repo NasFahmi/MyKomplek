@@ -8,6 +8,7 @@ use App\Http\Requests\UpdatePaymentRequest;
 use App\Services\FeeTypeService;
 use App\Services\HouseService;
 use App\Services\PaymentService;
+use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
 {
@@ -20,7 +21,7 @@ class PaymentController extends Controller
         $this->paymentService = $paymentService;
         $this->houseService = $houseService;
         $this->feeTypeService = $feeTypeService;
-        
+
     }
     /**
      * Display a listing of the resource.
@@ -28,8 +29,9 @@ class PaymentController extends Controller
     public function index()
     {
         $fee = $this->paymentService->getAllFeeType();
-        // dd($fee);
-        return view('pages.dashboard.pembayaran.index', compact('fee'));
+        $payment = $this->paymentService->getAllPayment();
+        // dd($payment);
+        return view('pages.dashboard.pembayaran.index', compact('fee', 'payment'));
     }
 
     /**
@@ -40,7 +42,7 @@ class PaymentController extends Controller
         $feeTypes = $this->feeTypeService->getAllFeeType();
         $houses = $this->paymentService->getActiveHouseResident();
         // dd($houses);
-        return view('pages.dashboard.pembayaran.create', compact('houses','feeTypes'));
+        return view('pages.dashboard.pembayaran.create', compact('houses', 'feeTypes'));
     }
 
     /**
@@ -48,7 +50,15 @@ class PaymentController extends Controller
      */
     public function store(StorePaymentRequest $request)
     {
-        dd($request);
+        $data = $request->validated();
+        // dd($data);
+        try {
+            $this->paymentService->createPayment($data);
+            return redirect()->route('pembayaran.index')->with('success', 'Pembayaran berhasil dibuat.');
+        } catch (\Throwable $th) {
+            Log::error('create error', ['error' => $th->getMessage()]);
+            return back()->with('error', 'Terjadi kesalahan saat Buat Pembayaran.');
+        }
     }
 
     /**
@@ -56,10 +66,17 @@ class PaymentController extends Controller
      */
     public function show(Payment $payment)
     {
-        $payment = $this->paymentService->getPaymentById($payment->id);
-        return view('pages.dashboard.pembayaran.show', compact('payment'));
-    }
+        // Ambil data pembayaran beserta detail per jenis iuran
+        $paymentWithFees = $this->paymentService->getPaymentByFeeType($payment->id);
+        // dd($paymentWithFees);    
 
+        // Kirim semua data yang diperlukan ke view
+        return view('pages.dashboard.pembayaran.show', [
+            'payment' => $paymentWithFees['payment'],
+            'groupedDetails' => $paymentWithFees['groupedDetails'],
+            'grandTotal' => $paymentWithFees['grandTotal']
+        ]);
+    }
     /**
      * Show the form for editing the specified resource.
      */
@@ -72,9 +89,15 @@ class PaymentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePaymentRequest $request, Payment $payment)
+    public function update(UpdatePaymentRequest $request, $payment)
     {
-        //
+        try {
+            $this->paymentService->updatePayment($payment);
+            return redirect()->route('pembayaran.index')->with('success', 'Pembayaran berhasil diupdate.');
+        } catch (\Throwable $th) {
+            Log::error('update error', ['error' => $th->getMessage()]);
+            return back()->with('error', 'Terjadi kesalahan saat update Pembayaran.');
+        }
     }
 
     /**

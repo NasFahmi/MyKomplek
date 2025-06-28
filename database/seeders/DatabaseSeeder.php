@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Expense;
 use App\Models\FeeType;
 use App\Models\House;
 use App\Models\HouseResident;
@@ -27,6 +28,8 @@ class DatabaseSeeder extends Seeder
         // 2. Seed Fee Types (with historical versions)
         $this->call(FeeTypeSeeder::class);
         $feeTypes = FeeType::all();
+        $expense = Expense::factory()->count(10)->create();
+        
 
         // 3. Create Houses and Residents
         // $houses = House::factory()->count(10)->create();

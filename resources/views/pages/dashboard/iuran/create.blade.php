@@ -104,18 +104,19 @@
                 <div>
                     <label for="status" class="block mb-2 text-sm font-medium dark:text-white">Status Iuran</label>
                     <label for="hs-basic-usage" class="relative flex items-center p-3 border border-gray-200 rounded-lg">
-    
+
                         <input type="hidden" name="is_active" value="0">
                         <input type="checkbox" id="hs-basic-usage" name="is_active"
-                            class="shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500" value="1">
+                            class="shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500"
+                            value="1">
                         <span class="text-sm text-gray-500 ms-3 dark:text-gray-400">Aktif</span>
                     </label>
                 </div>
-    
+
                 {{-- tanggal berlaku --}}
                 <div class="">
                     <label for="effective_date" class="block mb-2 text-sm font-medium">Tanggal Berlaku</label>
-    
+
                     <div class="relative w-full">
                         <div class="absolute inset-y-0 flex items-center pointer-events-none start-0 ps-3">
                             <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
@@ -126,9 +127,9 @@
                         </div>
                         <input id="datepicker-autohide" datepicker datepicker-autohide type="text" name="effective_date"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="Select date" > 
+                            placeholder="Select date">
                     </div>
-    
+
                     @error('effective_date')
                         <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -175,4 +176,6 @@
 
 
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/air-datepicker@3.6.0/air-datepicker.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/air-datepicker@3.6.0/air-datepicker.min.css" rel="stylesheet">
 @endsection

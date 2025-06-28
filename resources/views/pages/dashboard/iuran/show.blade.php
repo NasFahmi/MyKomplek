@@ -127,13 +127,15 @@
                             <tr>
                                 <th scope="col" class="px-6 py-3">Nama Pembayar</th>
                                 <th scope="col" class="px-6 py-3">Tanggal Bayar</th>
+                                <th scope="col" class="px-6 py-3">Bulan</th>
+                                <th scope="col" class="px-6 py-3">Tahun</th>
                                 <th scope="col" class="px-6 py-3 text-right">Jumlah</th>
                                 <th scope="col" class="px-6 py-3">Status</th>
                             </tr>
                         </thead>
                         <tbody>
                             {{-- FIX: Menggunakan @forelse dan looping pada relasi yang benar --}}
-                            @forelse ($feeType->paymentDetails as $detail)
+                            @forelse ($paymentDetails as $detail)
                                 <tr class="bg-white border-b hover:bg-gray-50">
                                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                                         {{-- Asumsi relasi: PaymentDetail -> Payment -> Resident --}}
@@ -141,6 +143,14 @@
                                     </th>
                                     <td class="px-6 py-4">
                                         {{ \Carbon\Carbon::parse($detail->payment->payment_date)->isoFormat('D MMMM YYYY') }}
+                                    </td>
+                                    {{-- bulan --}}
+                                    <td class="px-6 py-4">
+                                        {{ \Carbon\Carbon::create()->month($detail->month)->locale('id')->isoFormat('MMMM') }}
+                                    </td>
+                                    {{-- tahun --}}
+                                    <td class="px-6 py-4">
+                                        {{ $detail->year }}
                                     </td>
                                     <td class="px-6 py-4 font-medium text-right text-gray-800">
                                         {{-- FIX: Menghapus kurung kurawal ganda --}}
@@ -163,6 +173,12 @@
                             @endforelse
                         </tbody>
                     </table>
+                    <div class="p-4">
+                        {{ $paymentDetails->links() }}
+                        {{-- {{ $paymentDetails->onEachSide(1)->links('vendor.pagination.tailwind') }} --}}
+
+                    </div>
+
                 </div>
             </div>
         </div>

@@ -14,9 +14,9 @@ return new class extends Migration {
             $table->uuid('id')->primary();
             $table->foreignUuid('fee_type_id')->constrained('fee_types')->onDelete('restrict'); // Ubah cascade ke restrict
             $table->foreignUuid('payment_id')->constrained('payments')->onDelete('cascade');
-            $table->decimal('amount', 10, 2);
-            $table->string('fee_name'); // Backup nama fee
-            $table->decimal('original_amount', 10, 2); // Harga asli saat transaksi
+            $table->decimal('amount', 10, 2); //total
+            $table->tinyInteger('month'); // <= Tambahkan ini
+            $table->smallInteger('year'); // <= Tambahkan ini
             $table->timestamps();
         });
     }

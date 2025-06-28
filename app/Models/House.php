@@ -33,4 +33,7 @@ class House extends Model
     {
         return $this->hasMany(HouseResident::class, 'house_id');
     }
+    public function payment(){
+        return $this->hasMany(Payment::class, 'house_id');
+    }
 }

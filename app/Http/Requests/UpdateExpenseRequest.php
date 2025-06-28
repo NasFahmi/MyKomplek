@@ -11,7 +11,7 @@ class UpdateExpenseRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return auth()->check();
     }
 
     /**
@@ -22,7 +22,25 @@ class UpdateExpenseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'expense_type' => 'required|string',
+            'amount' => 'required|numeric',
+            'category' => 'required|string',
+            'payment_method' => 'required|string',
+            'date' => 'required|date',
+            'description' => 'nullable|string',
+        ];
+    }
+    public function messages()
+    {
+        return [
+            'expense_type.required' => 'Jenis pengeluaran harus diisi.',
+            'amount.required' => 'Jumlah harus diisi.',
+            'amount.numeric' => 'Jumlah harus berupa angka.',
+            'category.required' => 'Kategori harus diisi.',
+            'payment_method.required' => 'Metode pembayaran harus diisi.',
+            'date.required' => 'Tanggal harus diisi.',
+            'date.date' => 'Tanggal harus berupa tanggal.',
+
         ];
     }
 }

@@ -20,10 +20,8 @@ class Payment extends Model
     protected $fillable = [
         'code',
         'resident_id',
-        'home_id',
+        'house_id',
         'payment_date',
-        'month',
-        'year',
         'status',
         'description',
     ];

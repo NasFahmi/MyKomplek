@@ -38,7 +38,7 @@
         </div>
         <hr class="mb-6">
         {{-- card iuran --}}
-          @php
+        @php
             // Data contoh, ganti dengan data dari controller Anda
             // Daftar palet warna yang aman dan mudah dibaca
             $colorPalettes = [
@@ -60,20 +60,27 @@
                         // menggunakan operator modulo (%) pada index loop.
                         $color = $colorPalettes[$loop->index % count($colorPalettes)];
                     @endphp
-                    <a href="{{route('pembayaran.fee-type.show', $due->id)}}" class="flex-shrink-0 w-64 p-6 transition-transform duration-200 transform rounded-lg shadow-md hover:-translate-y-1 {{ $color['bg'] }}">
+                    <a href="{{ route('pembayaran.fee-type.show', $due->id) }}"
+                        class="flex-shrink-0 w-64 p-6 transition-transform duration-200 transform rounded-lg shadow-md hover:-translate-y-1 {{ $color['bg'] }}">
                         <div class="flex flex-col h-full">
                             <h4 class="text-lg font-bold {{ $color['text'] }}">{{ $due->name }}</h4>
                             <p class="mt-auto mb-1 text-3xl font-extrabold tracking-tight {{ $color['text'] }}">
                                 Rp {{ number_format($due->amount, 0, ',', '.') }}
                             </p>
-                            <p>{{$due->is_active ? 'Aktif' : 'Tidak Aktif'}}</p>
+                            <p>{{ $due->is_active ? 'Aktif' : 'Tidak Aktif' }}</p>
                         </div>
                     </a>
                 @endforeach
-                 {{-- Card untuk Tambah Iuran Baru --}}
-                <a href="{{route('pembayaran.fee-type.create')}}" class="flex flex-col items-center justify-center flex-shrink-0 w-64 p-6 transition-colors duration-200 border-2 border-dashed rounded-lg border-gray-300/80 hover:bg-gray-50 hover:border-blue-500">
+                {{-- Card untuk Tambah Iuran Baru --}}
+                <a href="{{ route('pembayaran.fee-type.create') }}"
+                    class="flex flex-col items-center justify-center flex-shrink-0 w-64 p-6 transition-colors duration-200 border-2 border-dashed rounded-lg border-gray-300/80 hover:bg-gray-50 hover:border-blue-500">
                     <div class="flex items-center justify-center w-16 h-16 text-gray-400 bg-gray-100 rounded-full">
-                         <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="5" y2="19"></line><line x1="5" x2="19" y1="12" y2="12"></line></svg>
+                        <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <line x1="12" x2="12" y1="5" y2="19"></line>
+                            <line x1="5" x2="19" y1="12" y2="12"></line>
+                        </svg>
                     </div>
                     <p class="mt-4 text-sm font-semibold text-gray-500">Tambah Iuran Baru</p>
                 </a>
@@ -111,7 +118,7 @@
                         </div>
                     </div>
 
-                    <a href="{{route('pembayaran.create')}}"
+                    <a href="{{ route('pembayaran.create') }}"
                         class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:ring-offset-1">
                         + Tambah Pembayaran
                     </a>
@@ -146,43 +153,60 @@
                                         <th scope="col" class="py-1 font-normal group text-start focus:outline-hidden">
                                             <div
                                                 class="py-1 px-2.5 inline-flex items-center border border-transparent text-sm text-gray-500 rounded-md hover:border-gray-200 dark:text-neutral-500 dark:hover:border-neutral-700">
-                                                Nomor Telepon
-                                                <svg class="size-3.5 ms-1 -me-0.5 text-gray-400 dark:text-neutral-500"
-                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                    <path
-                                                        class="hs-datatable-ordering-desc:text-blue-600 dark:hs-datatable-ordering-desc:text-blue-500"
-                                                        d="m7 15 5 5 5-5"></path>
-                                                    <path
-                                                        class="hs-datatable-ordering-asc:text-blue-600 dark:hs-datatable-ordering-asc:text-blue-500"
-                                                        d="m7 9 5-5 5 5"></path>
-                                                </svg>
-                                            </div>
-                                        </th>
-
-                                        <th scope="col" class="py-1 font-normal group text-start focus:outline-hidden">
-                                            <div
-                                                class="py-1 px-2.5 inline-flex items-center border border-transparent text-sm text-gray-500 rounded-md hover:border-gray-200 dark:text-neutral-500 dark:hover:border-neutral-700">
-                                                Alamat
-                                                <svg class="size-3.5 ms-1 -me-0.5 text-gray-400 dark:text-neutral-500"
-                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                    <path
-                                                        class="hs-datatable-ordering-desc:text-blue-600 dark:hs-datatable-ordering-desc:text-blue-500"
-                                                        d="m7 15 5 5 5-5"></path>
-                                                    <path
-                                                        class="hs-datatable-ordering-asc:text-blue-600 dark:hs-datatable-ordering-asc:text-blue-500"
-                                                        d="m7 9 5-5 5 5"></path>
-                                                </svg>
-                                            </div>
-                                        </th>
-
-                                        <th scope="col" class="py-1 font-normal group text-start focus:outline-hidden">
-                                            <div
-                                                class="py-1 px-2.5 inline-flex items-center border border-transparent text-sm text-gray-500 rounded-md hover:border-gray-200 dark:text-neutral-500 dark:hover:border-neutral-700">
                                                 Nomor Rumah
+                                                <svg class="size-3.5 ms-1 -me-0.5 text-gray-400 dark:text-neutral-500"
+                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path
+                                                        class="hs-datatable-ordering-desc:text-blue-600 dark:hs-datatable-ordering-desc:text-blue-500"
+                                                        d="m7 15 5 5 5-5"></path>
+                                                    <path
+                                                        class="hs-datatable-ordering-asc:text-blue-600 dark:hs-datatable-ordering-asc:text-blue-500"
+                                                        d="m7 9 5-5 5 5"></path>
+                                                </svg>
+                                            </div>
+                                        </th>
+
+                                        <th scope="col" class="py-1 font-normal group text-start focus:outline-hidden">
+                                            <div
+                                                class="py-1 px-2.5 inline-flex items-center border border-transparent text-sm text-gray-500 rounded-md hover:border-gray-200 dark:text-neutral-500 dark:hover:border-neutral-700">
+                                                Kode Pembayaran
+                                                <svg class="size-3.5 ms-1 -me-0.5 text-gray-400 dark:text-neutral-500"
+                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path
+                                                        class="hs-datatable-ordering-desc:text-blue-600 dark:hs-datatable-ordering-desc:text-blue-500"
+                                                        d="m7 15 5 5 5-5"></path>
+                                                    <path
+                                                        class="hs-datatable-ordering-asc:text-blue-600 dark:hs-datatable-ordering-asc:text-blue-500"
+                                                        d="m7 9 5-5 5 5"></path>
+                                                </svg>
+                                            </div>
+                                        </th>
+
+                                        <th scope="col" class="py-1 font-normal group text-start focus:outline-hidden">
+                                            <div
+                                                class="py-1 px-2.5 inline-flex items-center border border-transparent text-sm text-gray-500 rounded-md hover:border-gray-200 dark:text-neutral-500 dark:hover:border-neutral-700">
+                                                Tanggal Pembayaran
+                                                <svg class="size-3.5 ms-1 -me-0.5 text-gray-400 dark:text-neutral-500"
+                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path
+                                                        class="hs-datatable-ordering-desc:text-blue-600 dark:hs-datatable-ordering-desc:text-blue-500"
+                                                        d="m7 15 5 5 5-5"></path>
+                                                    <path
+                                                        class="hs-datatable-ordering-asc:text-blue-600 dark:hs-datatable-ordering-asc:text-blue-500"
+                                                        d="m7 9 5-5 5 5"></path>
+                                                </svg>
+                                            </div>
+                                        </th>
+                                        <th scope="col" class="py-1 font-normal group text-start focus:outline-hidden">
+                                            <div
+                                                class="py-1 px-2.5 inline-flex items-center border border-transparent text-sm text-gray-500 rounded-md hover:border-gray-200 dark:text-neutral-500 dark:hover:border-neutral-700">
+                                                Total
                                                 <svg class="size-3.5 ms-1 -me-0.5 text-gray-400 dark:text-neutral-500"
                                                     xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -203,29 +227,37 @@
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
-                                    <tr>
-                                        {{-- nama --}}
-                                        <td
-                                            class="p-3 text-sm font-medium text-gray-800 whitespace-nowrap dark:text-neutral-200">
-                                            Test
-                                        </td>
-                                        {{-- nomor hp --}}
-                                        <td class="p-3 text-sm text-gray-800 whitespace-nowrap dark:text-neutral-200">
-                                            test
-                                        </td>
-                                        {{-- alamat --}}
-                                        <td class="p-3 text-sm text-gray-800 whitespace-nowrap dark:text-neutral-200">
-                                            test
-                                        </td>
-                                        {{-- nomor rumah --}}
-                                        <td class="p-3 text-sm text-gray-800 whitespace-nowrap dark:text-neutral-200">
-                                            test
-                                        </td>
-                                        <td class="p-3 text-sm font-medium whitespace-nowrap text-end">
-                                            <a href=""
-                                                class="inline-flex items-center text-sm font-semibold text-blue-600 border border-transparent rounded-lg gap-x-2 hover:text-blue-800 focus:outline-hidden focus:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:text-blue-400">Detail</button>
-                                        </td>
-                                    </tr>
+                                    @foreach ($payment as $item)
+                                        <tr>
+                                            {{-- nama --}}
+                                            <td
+                                                class="p-3 text-sm font-medium text-gray-800 whitespace-nowrap dark:text-neutral-200">
+                                                {{ $item->resident->name }}
+                                            </td>
+                                            {{-- nomor rumah --}}
+                                            <td class="p-3 text-sm text-gray-800 whitespace-nowrap dark:text-neutral-200">
+                                                {{ $item->resident->currentHouse->house->house_number }}
+                                            </td>
+                                            {{-- kode Pembayaran --}}
+                                            <td class="p-3 text-sm text-gray-800 whitespace-nowrap dark:text-neutral-200">
+                                                {{ $item->code }}
+                                            </td>
+                                            {{-- tanggal Pembayaran --}}
+                                            <td class="p-3 text-sm text-gray-800 whitespace-nowrap dark:text-neutral-200">
+                                                {{ \Carbon\Carbon::parse($item->payment_date)->format('d-m-Y') }}
+                                            </td>
+                                            {{-- Total Pembayaran --}}
+                                            <td class="p-3 text-sm text-gray-800 whitespace-nowrap dark:text-neutral-200">
+                                                
+                                                Rp {{ number_format($item->paymentDetail->sum('amount'), 0, ',', '.') }}
+                                                {{-- Rp {{ number_format($item->paymentDetails   , 0, ',', '.') }} --}}
+                                            </td>
+                                            <td class="p-3 text-sm font-medium whitespace-nowrap text-end">
+                                                <a href="{{route('pembayaran.show', $item->id)}}"
+                                                    class="inline-flex items-center text-sm font-semibold text-blue-600 border border-transparent rounded-lg gap-x-2 hover:text-blue-800 focus:outline-hidden focus:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:text-blue-400">Detail</button>
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
