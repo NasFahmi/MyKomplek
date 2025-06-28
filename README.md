@@ -170,6 +170,12 @@ Aplikasi akan berjalan di:
 ```bash
 http://127.0.0.1:8000
 ```
+#### 6. 🖥️ Login Dashboard
+login di dashboard menggunakan credentials
+```bash
+username = pakrt
+password = password
+```
 
 ##  Lisensi
 This project was developed by [Nasrul Fahmi](https://github.com/NasFahmi) and is released as open-source software under the following license:
